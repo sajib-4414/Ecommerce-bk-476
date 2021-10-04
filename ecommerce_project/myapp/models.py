@@ -75,6 +75,31 @@ class Product(models.Model):
         return data
 
 
+class Review(models.Model):
+    description = models.CharField(max_length=200)
+    user = models.ForeignKey(BuyerUser, on_delete=models.CASCADE, related_name='reviews_of')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews_of', null=True)
+
+    def __str__(self):
+        data = (self.description[:25] + '..') if len(self.description) > 25 else self.description
+        return data
+
+
 class Cart(models.Model):
     unique_id = models.CharField(max_length=50, null=True)
     products = models.ManyToManyField(Product, related_name='carts_where_this_product', blank=True)
+
+    def __str__(self):
+        data = self.unique_id
+        return data
+
+
+class Order(models.Model):
+    buyer = models.ForeignKey(BuyerUser, on_delete=models.CASCADE, related_name='orders_of')
+    products = models.ManyToManyField(Product, blank=True)
+    date = models.DateTimeField(auto_now_add=True, blank=True)
+    value = models.FloatField()
+
+    def __str__(self):
+        data = "Order of buyer "+ self.buyer.full_name
+        return data
