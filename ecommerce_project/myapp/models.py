@@ -57,18 +57,24 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     price = models.FloatField()
     quantity = models.IntegerField()
-    category = models.OneToOneField(
+    category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
         related_name='category_of',
     )
-    company = models.OneToOneField(
+    company = models.ForeignKey(
         Company,
         on_delete=models.CASCADE,
         related_name='company_of',
     )
     delivery_cost = models.FloatField()
+    # cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='products')
 
     def __str__(self):
         data = self.name
         return data
+
+
+class Cart(models.Model):
+    unique_id = models.CharField(max_length=50, null=True)
+    products = models.ManyToManyField(Product, related_name='carts_where_this_product', blank=True)
