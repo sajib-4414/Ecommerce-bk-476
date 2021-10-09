@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ecommerce_project.myapp.models import BuyerUser
+from ecommerce_project.myapp.models import BuyerUser, SellerUser
 from ecommerce_project.myapp.serializers.OtherSerializers import AddressOutputSerializer
 
 
@@ -14,3 +14,9 @@ class BuyerOutputSerializer(serializers.ModelSerializer):
 
     def get_pk(self,obj):
         return obj.id
+
+
+class SellerOutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SellerUser
+        fields = '__all__'

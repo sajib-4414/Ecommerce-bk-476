@@ -24,4 +24,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('buyers/', views.BuyersUserAPIView.as_view()),
+    path('sellers/', views.SellersUserAPIView.as_view()),
 ]

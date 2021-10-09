@@ -40,6 +40,17 @@ class BuyerUser(models.Model):
         return data
 
 
+class SellerUser(models.Model):
+    name = models.CharField(max_length=200)
+    email = models.CharField(max_length=30)
+    password = models.CharField(max_length=50)
+    photoIdNum = models.CharField(max_length=50)
+
+    def __str__(self):
+        data = self.name
+        return data
+
+
 class Company(models.Model):
     CompanyName = models.CharField(max_length=100)
     address = models.OneToOneField(
@@ -66,6 +77,12 @@ class Product(models.Model):
         Company,
         on_delete=models.CASCADE,
         related_name='company_of',
+    )
+    seller = models.ForeignKey(
+        SellerUser,
+        on_delete=models.CASCADE,
+        related_name='seller_of',
+        null=True
     )
     delivery_cost = models.FloatField()
     # cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='products')
