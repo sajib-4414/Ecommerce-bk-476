@@ -16,10 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+from ecommerce_project.myapp import views
 
 router = routers.DefaultRouter()
 
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
+    path('buyers/', views.BuyersUserAPIView.as_view()),
 ]
