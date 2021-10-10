@@ -1,16 +1,16 @@
 from rest_framework import serializers
 from django.shortcuts import get_object_or_404
-from ecommerce_project.myapp.models import Product, Category, Company, SellerUser
+from ecommerce_project.myapp.models import Product, Category, Company, SellerUser, Review, BuyerUser
 from ecommerce_project.myapp.serializers.OtherSerializers import CategorySerializer
-from ecommerce_project.myapp.serializers.UserSerializers import CompanyOutputSerializer, SellerOutputSerializer
-from django.core.exceptions import ObjectDoesNotExist
+from ecommerce_project.myapp.serializers.UserSerializers import CompanyOutputSerializer, SellerOutputSerializer, \
+    BuyerOutputSerializer
+
 
 class ProductOutputSerializer(serializers.ModelSerializer):
     pk = serializers.SerializerMethodField()
     category = CategorySerializer()
     company = CompanyOutputSerializer()
     seller = SellerOutputSerializer()
-    # address = AddressSerializer()
 
     class Meta:
         model = Product
@@ -21,9 +21,6 @@ class ProductOutputSerializer(serializers.ModelSerializer):
 
 
 class ProductInputSerializer(serializers.ModelSerializer):
-    # category = CategorySerializer()
-    # company = CompanyOutputSerializer()
-    # seller = SellerOutputSerializer()
     category_id = serializers.IntegerField(required=True)
     company_id = serializers.IntegerField(required=True)
     seller_id = serializers.IntegerField(required=True)
@@ -58,3 +55,46 @@ class ProductInputSerializer(serializers.ModelSerializer):
 
         product.save()
         return product
+
+
+class ReviewOutputSerializer(serializers.ModelSerializer):
+    pk = serializers.SerializerMethodField()
+    user = BuyerOutputSerializer()
+    product = ProductOutputSerializer()
+
+    class Meta:
+        model = Review
+        fields = ['user', 'description','product', 'pk']
+
+    def get_pk(self,obj):
+        return obj.id
+
+
+class ReviewInputSerializer(serializers.ModelSerializer):
+    buyer_user_id = serializers.IntegerField(required=True)
+    product_id = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = Review
+        fields = ['buyer_user_id', 'product_id','description']
+
+    def create(self, validated_data):
+        buyer_user_id = validated_data.pop('buyer_user_id')
+        product_id = validated_data.pop('product_id')
+        review = Review.objects.create(**validated_data)
+
+        try:
+            buyer_user = BuyerUser.objects.get(pk=buyer_user_id)
+        except BuyerUser.DoesNotExist:
+            raise serializers.ValidationError("userError: problem with the user for this review.")
+        review.user = buyer_user
+
+        try:
+            product = Product.objects.get(pk=product_id)
+        except Product.DoesNotExist:
+            raise serializers.ValidationError("productError: problem with the product for this review")
+        review.product = product
+
+        review.save()
+        return review
+

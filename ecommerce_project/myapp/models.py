@@ -99,7 +99,7 @@ class Product(models.Model):
 
 class Review(models.Model):
     description = models.CharField(max_length=200)
-    user = models.ForeignKey(BuyerUser, on_delete=models.CASCADE, related_name='reviews_of')
+    user = models.ForeignKey(BuyerUser, on_delete=models.CASCADE, related_name='reviews_of', null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews_of', null=True)
 
     def __str__(self):
