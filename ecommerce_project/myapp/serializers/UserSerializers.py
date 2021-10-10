@@ -16,9 +16,15 @@ class BuyerOutputSerializer(serializers.ModelSerializer):
 
 
 class SellerOutputSerializer(serializers.ModelSerializer):
+    pk = serializers.SerializerMethodField()
+    photo_id_num = serializers.CharField(source='photoIdNum')  # Changing the model's name
+
     class Meta:
         model = SellerUser
-        fields = '__all__'
+        fields = ('name', 'email','photo_id_num', 'pk')
+
+    def get_pk(self,obj):
+        return obj.id
 
 
 class BuyerInputSerializer(serializers.ModelSerializer):
