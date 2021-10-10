@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from ecommerce_project.myapp.models import BuyerUser, SellerUser, Address
 from ecommerce_project.myapp.serializers.OtherSerializers import AddressOutputSerializer
 
@@ -24,29 +23,15 @@ class SellerOutputSerializer(serializers.ModelSerializer):
 
 class BuyerInputSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
-    user_id = serializers.SerializerMethodField('get_user_id')
     address = AddressOutputSerializer()
-
-    # image = ImageSerializer(required=False)  # If you write here ImageSerializer then serializer will expect an integer(which)
-    # # is primary key here in the payload and also output the same, if you write here ImageSerializer() then the payload
-    # # have to contain dict and also output the image as dict
-
-    def get_user_id(self, obj):
-        return obj.id
 
     class Meta:
         model = BuyerUser
-        fields = ('full_name', 'email', 'username', 'password','address','user_id')
+        fields = ('full_name', 'email', 'username', 'password','address')
         required_spec_dict = {
             'required': True,
             'allow_blank': False
         }
-        # extra_kwargs = {
-        #     'email': required_spec_dict
-        # }
-        # expandable_fields = {
-        #     'image': (ImageSerializer, {'many': False}),
-        # }
 
     def create(self, validated_data):
         address_data = validated_data.pop('address')
@@ -56,7 +41,15 @@ class BuyerInputSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-        # user = super(BuyerInputSerializer, self).create(validated_data)
-        # user.set_password(validated_data['password'])
-        # user.save()
-        # return user
+
+class SellerInputSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    photo_id_num = serializers.CharField(source='photoIdNum') #Changing the model's name in API input field
+
+    class Meta:
+        model = SellerUser
+        fields = ('name', 'email', 'password','photo_id_num')
+
+    def create(self, validated_data):
+        user = SellerUser.objects.create(**validated_data)
+        return user

@@ -4,7 +4,7 @@ from ecommerce_project.myapp.models import BuyerUser, SellerUser
 from rest_framework.response import Response
 
 from ecommerce_project.myapp.serializers.UserSerializers import BuyerOutputSerializer, SellerOutputSerializer, \
-    BuyerInputSerializer
+    BuyerInputSerializer, SellerInputSerializer
 
 
 class BuyersUserAPIView(APIView):
@@ -39,3 +39,14 @@ class SellersUserAPIView(APIView):
         sellers = SellerUser.objects.all() #.filter(author__username=logged_in_username)
         serializer = SellerOutputSerializer(sellers, many=True)
         return Response(serializer.data)
+
+
+    def post(self, request, format=None):
+        serializer = SellerInputSerializer(data=request.data.copy())
+        # logged_in_username = get_logged_in_username(request)
+        # serializer.context["username"] = logged_in_username
+        if serializer.is_valid():
+            created_seller = serializer.save()
+            output_serializer = SellerOutputSerializer(created_seller)
+            return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
