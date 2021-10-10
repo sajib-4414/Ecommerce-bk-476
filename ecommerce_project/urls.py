@@ -25,4 +25,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('buyers/', views.BuyersUserAPIView.as_view()),
     path('sellers/', views.SellersUserAPIView.as_view()),
+    path('companies/', views.CompaniesAPIView.as_view()),
 ]

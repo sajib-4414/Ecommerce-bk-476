@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ecommerce_project.myapp.models import BuyerUser, SellerUser, Address
+from ecommerce_project.myapp.models import BuyerUser, SellerUser, Address, Company
 from ecommerce_project.myapp.serializers.OtherSerializers import AddressOutputSerializer
 
 
@@ -59,3 +59,16 @@ class SellerInputSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = SellerUser.objects.create(**validated_data)
         return user
+
+
+class CompanyOutputSerializer(serializers.ModelSerializer):
+    pk = serializers.SerializerMethodField()
+    address = AddressOutputSerializer()
+    company_name = serializers.CharField(source='CompanyName')  # Changing the model's name
+
+    class Meta:
+        model = Company
+        fields = ('company_name', 'address', 'pk')
+
+    def get_pk(self,obj):
+        return obj.id
