@@ -33,6 +33,7 @@ class BuyerUser(models.Model):
         Address,
         on_delete=models.CASCADE,
         related_name='address_of',
+        null=True
     )
 
     def __str__(self):
