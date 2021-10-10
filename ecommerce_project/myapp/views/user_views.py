@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from ecommerce_project.myapp.models import BuyerUser, SellerUser, Company
 from rest_framework.response import Response
 from ecommerce_project.myapp.serializers.UserSerializers import BuyerOutputSerializer, SellerOutputSerializer, \
-    BuyerInputSerializer, SellerInputSerializer, CompanyOutputSerializer
+    BuyerInputSerializer, SellerInputSerializer, CompanyOutputSerializer, CompanyInputSerializer
 
 
 class BuyersUserAPIView(APIView):
@@ -61,12 +61,12 @@ class CompaniesAPIView(APIView):
         serializer = CompanyOutputSerializer(companies, many=True)
         return Response(serializer.data)
 
-    # def post(self, request, format=None):
-    #     serializer = SellerInputSerializer(data=request.data.copy())
-    #     # logged_in_username = get_logged_in_username(request)
-    #     # serializer.context["username"] = logged_in_username
-    #     if serializer.is_valid():
-    #         created_seller = serializer.save()
-    #         output_serializer = SellerOutputSerializer(created_seller)
-    #         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request, format=None):
+        serializer = CompanyInputSerializer(data=request.data.copy())
+        # logged_in_username = get_logged_in_username(request)
+        # serializer.context["username"] = logged_in_username
+        if serializer.is_valid():
+            created_company = serializer.save()
+            output_serializer = CompanyOutputSerializer(created_company)
+            return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

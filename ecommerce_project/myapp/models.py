@@ -54,10 +54,12 @@ class SellerUser(models.Model):
 
 class Company(models.Model):
     CompanyName = models.CharField(max_length=100)
+    company_username = models.CharField(max_length=50,null=True)
     address = models.OneToOneField(
         Address,
         on_delete=models.CASCADE,
         related_name='company_address_of',
+        null=True
     )
 
     def __str__(self):
