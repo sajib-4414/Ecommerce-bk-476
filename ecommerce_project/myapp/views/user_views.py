@@ -12,15 +12,12 @@ class BuyersUserAPIView(APIView):
     only for list and creation
     '''
     def get(self, request, format=None):
-        # logged_in_username = get_logged_in_username(request)
-        buyers = BuyerUser.objects.all() #.filter(author__username=logged_in_username)
+        buyers = BuyerUser.objects.all()
         serializer = BuyerOutputSerializer(buyers, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
         serializer = BuyerInputSerializer(data=request.data.copy())
-        # logged_in_username = get_logged_in_username(request)
-        # serializer.context["username"] = logged_in_username
         if serializer.is_valid():
             created_buyer = serializer.save()
             output_serializer = BuyerOutputSerializer(created_buyer)
@@ -34,15 +31,12 @@ class SellersUserAPIView(APIView):
     only for list and creation
     '''
     def get(self, request, format=None):
-        # logged_in_username = get_logged_in_username(request)
-        sellers = SellerUser.objects.all() #.filter(author__username=logged_in_username)
+        sellers = SellerUser.objects.all()
         serializer = SellerOutputSerializer(sellers, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
         serializer = SellerInputSerializer(data=request.data.copy())
-        # logged_in_username = get_logged_in_username(request)
-        # serializer.context["username"] = logged_in_username
         if serializer.is_valid():
             created_seller = serializer.save()
             output_serializer = SellerOutputSerializer(created_seller)
@@ -56,15 +50,12 @@ class CompaniesAPIView(APIView):
     only for list and creation
     '''
     def get(self, request, format=None):
-        # logged_in_username = get_logged_in_username(request)
-        companies = Company.objects.all() #.filter(author__username=logged_in_username)
+        companies = Company.objects.all()
         serializer = CompanyOutputSerializer(companies, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
         serializer = CompanyInputSerializer(data=request.data.copy())
-        # logged_in_username = get_logged_in_username(request)
-        # serializer.context["username"] = logged_in_username
         if serializer.is_valid():
             created_company = serializer.save()
             output_serializer = CompanyOutputSerializer(created_company)
