@@ -75,11 +75,13 @@ class Product(models.Model):
         Category,
         on_delete=models.CASCADE,
         related_name='category_of',
+        null=True
     )
     company = models.ForeignKey(
         Company,
         on_delete=models.CASCADE,
         related_name='company_of',
+        null=True
     )
     seller = models.ForeignKey(
         SellerUser,
