@@ -28,4 +28,5 @@ urlpatterns = [
     path('companies/', views.CompaniesAPIView.as_view()),
     path('addresses/', views.AddressListNCreateAPIView.as_view()),
     path('categories/', views.CategoryListNCreateAPIView.as_view()),
+    path('products/', views.ProductListNCreateAPIView.as_view()),
 ]
