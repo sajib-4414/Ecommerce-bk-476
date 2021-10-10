@@ -1,9 +1,9 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from ecommerce_project.myapp.models import Product, Review
+from ecommerce_project.myapp.models import Product, Review, Order
 from ecommerce_project.myapp.serializers.product_related_seralizers import ProductOutputSerializer, \
-    ProductInputSerializer, ReviewOutputSerializer, ReviewInputSerializer
+    ProductInputSerializer, ReviewOutputSerializer, ReviewInputSerializer, OrderOutputSerializer
 
 
 class ProductListNCreateAPIView(APIView):
@@ -42,3 +42,23 @@ class ReviewListNCreateAPIView(APIView):
             output_serializer = ReviewOutputSerializer(created_review)
             return Response(output_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class OrderListNCreateAPIView(APIView):
+    # permission_classes = [IsAuthenticated]
+    '''
+    only for list and creation
+    '''
+    def get(self, request, format=None):
+        order_list = Order.objects.all()
+        serializer = OrderOutputSerializer(order_list, many=True)
+        return Response(serializer.data)
+
+    # def post(self, request, format=None):
+    #     serializer = ReviewInputSerializer(data=request.data.copy())
+    #     if serializer.is_valid():
+    #         created_review = serializer.save()
+    #         print("I am here")
+    #         output_serializer = ReviewOutputSerializer(created_review)
+    #         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
