@@ -143,3 +143,34 @@ class OrderLineOutputSerializer(serializers.ModelSerializer):
 
     def get_pk(self,obj):
         return obj.id
+
+
+class OrderLineInputSerializer(serializers.ModelSerializer):
+    product_id = serializers.IntegerField(required=True)
+    order_id = serializers.IntegerField(required=True)
+    quantity = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = OrderLine
+        fields = ['product_id', 'order_id','quantity']
+
+    def create(self, validated_data):
+        product_id = validated_data.pop('product_id')
+        order_id = validated_data.pop('order_id')
+        orderline = OrderLine.objects.create(**validated_data)
+
+        print("I am here")
+        try:
+            product = Product.objects.get(pk=product_id)
+        except Product.DoesNotExist:
+            raise serializers.ValidationError("productError: problem with the product for this orderline.")
+        orderline.product = product
+
+        try:
+            order = Order.objects.get(pk=order_id)
+        except Order.DoesNotExist:
+            raise serializers.ValidationError("orderError: problem with the order for this orderline.")
+        orderline.order = order
+
+        orderline.save()
+        return orderline

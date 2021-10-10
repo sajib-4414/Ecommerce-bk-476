@@ -138,7 +138,7 @@ class Order(models.Model):
 
 
 class OrderLine(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.IntegerField(default=1)
 
