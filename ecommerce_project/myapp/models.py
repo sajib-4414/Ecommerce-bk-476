@@ -127,7 +127,7 @@ class CartLine(models.Model):
 
 
 class Order(models.Model):
-    buyer = models.ForeignKey(BuyerUser, on_delete=models.CASCADE, related_name='orders_of')
+    buyer = models.ForeignKey(BuyerUser, on_delete=models.CASCADE, related_name='orders_of', null=True)
     # products = models.ManyToManyField(Product, blank=True)
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     value = models.FloatField()

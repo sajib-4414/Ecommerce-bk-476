@@ -109,3 +109,24 @@ class OrderOutputSerializer(serializers.ModelSerializer):
 
     def get_pk(self,obj):
         return obj.id
+
+
+class OrderInputSerializer(serializers.ModelSerializer):
+    buyer_user_id = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = Order
+        fields = ['buyer_user_id', 'value']
+
+    def create(self, validated_data):
+        buyer_user_id = validated_data.pop('buyer_user_id')
+        order = Order.objects.create(**validated_data)
+
+        try:
+            buyer_user = BuyerUser.objects.get(pk=buyer_user_id)
+        except BuyerUser.DoesNotExist:
+            raise serializers.ValidationError("userError: problem with the user for this order.")
+        order.buyer = buyer_user
+
+        order.save()
+        return order
