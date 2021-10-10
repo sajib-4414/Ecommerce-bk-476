@@ -1,11 +1,11 @@
 from rest_framework import serializers
 from ecommerce_project.myapp.models import BuyerUser, SellerUser, Address, Company
-from ecommerce_project.myapp.serializers.OtherSerializers import AddressOutputSerializer
+from ecommerce_project.myapp.serializers.OtherSerializers import AddressSerializer
 
 
 class BuyerOutputSerializer(serializers.ModelSerializer):
     pk = serializers.SerializerMethodField()
-    address = AddressOutputSerializer()
+    address = AddressSerializer()
 
     class Meta:
         model = BuyerUser
@@ -29,7 +29,7 @@ class SellerOutputSerializer(serializers.ModelSerializer):
 
 class BuyerInputSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
-    address = AddressOutputSerializer()
+    address = AddressSerializer()
 
     class Meta:
         model = BuyerUser
@@ -59,7 +59,7 @@ class SellerInputSerializer(serializers.ModelSerializer):
 
 class CompanyOutputSerializer(serializers.ModelSerializer):
     pk = serializers.SerializerMethodField()
-    address = AddressOutputSerializer()
+    address = AddressSerializer()
     company_name = serializers.CharField(source='CompanyName')  # Changing the model's name
 
     class Meta:
@@ -71,7 +71,7 @@ class CompanyOutputSerializer(serializers.ModelSerializer):
 
 
 class CompanyInputSerializer(serializers.ModelSerializer):
-    address = AddressOutputSerializer()
+    address = AddressSerializer()
     company_name = serializers.CharField(source='CompanyName')
 
     class Meta:
