@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.shortcuts import get_object_or_404
-from ecommerce_project.myapp.models import Product, Category, Company, SellerUser, Review, BuyerUser, Order
+from ecommerce_project.myapp.models import Product, Category, Company, SellerUser, Review, BuyerUser, Order, OrderLine
 from ecommerce_project.myapp.serializers.OtherSerializers import CategorySerializer
 from ecommerce_project.myapp.serializers.UserSerializers import CompanyOutputSerializer, SellerOutputSerializer, \
     BuyerOutputSerializer
@@ -130,3 +130,16 @@ class OrderInputSerializer(serializers.ModelSerializer):
 
         order.save()
         return order
+
+
+class OrderLineOutputSerializer(serializers.ModelSerializer):
+    pk = serializers.SerializerMethodField()
+    product = ProductOutputSerializer()
+    order = OrderOutputSerializer()
+
+    class Meta:
+        model = OrderLine
+        fields = ['product', 'quantity', 'order', 'pk']
+
+    def get_pk(self,obj):
+        return obj.id
