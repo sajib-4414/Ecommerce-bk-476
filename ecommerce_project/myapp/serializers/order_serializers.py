@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from ecommerce_project.myapp.models import Product, BuyerUser, Order, OrderLine
-from ecommerce_project.myapp.serializers.UserSerializers import \
-    BuyerOutputSerializer
+from ecommerce_project.myapp.serializers import BuyerOutputSerializer
 from ecommerce_project.myapp.serializers.product_serializers import ProductOutputSerializer
 
 

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from ecommerce_project.myapp.models import Review, BuyerUser, Product
 from ecommerce_project.myapp.serializers import ProductOutputSerializer
-from ecommerce_project.myapp.serializers.UserSerializers import BuyerOutputSerializer
+from ecommerce_project.myapp.serializers.buyer_serializers import BuyerOutputSerializer
 
 
 class ReviewOutputSerializer(serializers.ModelSerializer):
