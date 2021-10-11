@@ -56,18 +56,17 @@ class BuyerUpdateSerializer(serializers.Serializer):
         if 'address' in validated_data:
             address_data = validated_data.pop('address')
             #check if the user already have an address
-            if Address.objects.filter(pk=instance.id).exists():
+            try:
                 existing_address = BuyerUser.objects.get(pk=instance.id).address
-                print("Making query for id "+str(instance.id))
-                #now update the fields
                 existing_address.street_address = address_data.get('street_address')
                 existing_address.city = address_data.get('city')
                 existing_address.province = address_data.get('province')
                 existing_address.zipcode = address_data.get('zipcode')
                 existing_address.save()
-            else:
+            except Address.DoesNotExist:
                 new_address = Address.objects.create(**address_data)
                 instance.address = new_address
+
 
         instance.save()
         return instance
