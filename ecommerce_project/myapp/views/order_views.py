@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from ecommerce_project.myapp.models import Order, OrderLine
 from ecommerce_project.myapp.serializers.order_serializers import OrderOutputSerializer, OrderInputSerializer, \
-    OrderLineOutputSerializer, OrderLineInputSerializer, OrderUpdateSerializer
+    OrderLineOutputSerializer, OrderLineInputSerializer, OrderUpdateSerializer, OrderLineUpdateSerializer
 
 
 class OrderListNCreateAPIView(APIView):
@@ -68,6 +68,34 @@ class OrderDetailUpdateDeleteAPIView(APIView):
 
     def delete(self, request, pk, format=None):
         cartline = get_object_or_404(Order, pk=pk)
+        # validate_if_post_or_comment_owner_logged_in(request, post)
+        cartline.delete()
+        return Response({"delete": "delete success"},status=status.HTTP_204_NO_CONTENT)
+
+
+class OrderLineDetailUpdateDeleteAPIView(APIView):
+    """
+    Retrieve, update or delete a object instance.
+    """
+    # permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk, format=None):
+        orderline = get_object_or_404(OrderLine, pk=pk)
+        serializer = OrderLineOutputSerializer(orderline)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        orderline = get_object_or_404(OrderLine, pk=pk)
+        # validate_if_post_or_comment_owner_logged_in(request, post)
+        serializer = OrderLineUpdateSerializer(orderline, data=request.data)
+        if serializer.is_valid():
+            updated_orderline = serializer.save()
+            output_serializer = OrderLineOutputSerializer(updated_orderline)
+            return Response(output_serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        cartline = get_object_or_404(OrderLine, pk=pk)
         # validate_if_post_or_comment_owner_logged_in(request, post)
         cartline.delete()
         return Response({"delete": "delete success"},status=status.HTTP_204_NO_CONTENT)
