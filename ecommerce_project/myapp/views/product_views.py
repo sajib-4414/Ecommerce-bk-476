@@ -35,22 +35,16 @@ class ProductListNCreateAPIView(APIView):
 
 class ProductDetailUpdateDeleteAPIView(APIView):
     """
-    Retrieve, update or delete a post instance.
+    Retrieve, update or delete a object instance.
     """
     # permission_classes = [IsAuthenticated]
 
     def get(self, request, pk, format=None):
-        """
-        anyone should be able to view any post
-        """
         product = get_product_object(pk)
         serializer = ProductOutputSerializer(product)
         return Response(serializer.data)
 
     # def put(self, request, pk, format=None):
-    #     """
-    #     only author should be able to update his post
-    #     """
     #     post = get_product_object(pk)
     #     validate_if_post_or_comment_owner_logged_in(request, post)
     #     serializer = PostUpdateSerializer(post, data=request.data)
@@ -59,11 +53,8 @@ class ProductDetailUpdateDeleteAPIView(APIView):
     #         return Response(serializer.data)
     #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     #
-    # def delete(self, request, pk, format=None):
-    #     """
-    #     only author should be able to delete his post
-    #     """
-    #     post = get_product_object(pk)
-    #     validate_if_post_or_comment_owner_logged_in(request, post)
-    #     post.delete()
-    #     return Response({"delete": "delete success"},status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, pk, format=None):
+        product = get_product_object(pk)
+        # validate_if_post_or_comment_owner_logged_in(request, post)
+        product.delete()
+        return Response({"delete": "delete success"},status=status.HTTP_204_NO_CONTENT)
