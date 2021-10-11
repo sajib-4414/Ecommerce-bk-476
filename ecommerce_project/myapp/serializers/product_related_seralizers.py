@@ -252,12 +252,10 @@ class CartLineInputSerializer(serializers.ModelSerializer):
         product_id = validated_data.pop('product_id')
         cart_id = validated_data.pop('cart_id')
 
-
         try:
             product = Product.objects.get(pk=product_id)
         except Product.DoesNotExist:
             raise serializers.ValidationError("productError: problem with the product for this carline.")
-
 
         try:
             cart = Cart.objects.get(pk=cart_id)

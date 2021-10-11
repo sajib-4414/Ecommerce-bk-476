@@ -8,23 +8,7 @@ from ecommerce_project.myapp.serializers.product_related_seralizers import Produ
     CartLineOutputSerializer, CartLineInputSerializer
 
 
-class ProductListNCreateAPIView(APIView):
-    # permission_classes = [IsAuthenticated]
-    '''
-    only for list and creation
-    '''
-    def get(self, request, format=None):
-        product_list = Product.objects.all()
-        serializer = ProductOutputSerializer(product_list, many=True)
-        return Response(serializer.data)
 
-    def post(self, request, format=None):
-        serializer = ProductInputSerializer(data=request.data.copy())
-        if serializer.is_valid():
-            created_product = serializer.save()
-            output_serializer = ProductOutputSerializer(created_product)
-            return Response(output_serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ReviewListNCreateAPIView(APIView):
     # permission_classes = [IsAuthenticated]
