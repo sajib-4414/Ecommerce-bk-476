@@ -187,3 +187,41 @@ class CartOutputSerializer(serializers.ModelSerializer):
 
     def get_pk(self,obj):
         return obj.id
+
+
+class CartInputSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = Cart
+        fields = ['user_id', 'unique_id']
+        required_spec_dict = {
+            'required': True,
+            'allow_blank': False
+        }
+        # This will force a field in the userinput to make it required, even if
+        # the corresponding model field is not required/null=true
+        extra_kwargs = {
+            'unique_id': required_spec_dict
+        }
+
+    def create(self, validated_data):
+        #the trick here is, we made the user field optional so the serializer donn't keep
+        #asking for that as required field. The user is already created before, so it makes
+        #no sense to send user profile in the payload, only user id is enough
+        #so, we add an extra field in the api payload, which will be cut
+        # and then cart will be created and we later associate the user with this id in the cart
+        user_id = validated_data.pop('user_id')
+        cart = Cart.objects.create(**validated_data)
+
+        try:
+            buyer_user = BuyerUser.objects.get(pk=user_id)
+        except BuyerUser.DoesNotExist:
+            raise serializers.ValidationError("userError: problem with the user for this cart.")
+        if Cart.objects.filter(user=buyer_user).exists():
+            raise serializers.ValidationError("userError: Cart already exists for the user")
+        else:
+            cart.user = buyer_user
+
+        cart.save()
+        return cart
