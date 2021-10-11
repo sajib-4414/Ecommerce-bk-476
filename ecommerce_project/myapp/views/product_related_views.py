@@ -5,7 +5,7 @@ from ecommerce_project.myapp.models import Product, Review, Order, OrderLine, Ca
 from ecommerce_project.myapp.serializers.product_related_seralizers import ProductOutputSerializer, \
     ProductInputSerializer, ReviewOutputSerializer, ReviewInputSerializer, OrderOutputSerializer, OrderInputSerializer, \
     OrderLineOutputSerializer, OrderLineInputSerializer, CartOutputSerializer, CartInputSerializer, \
-    CartLineOutputSerializer
+    CartLineOutputSerializer, CartLineInputSerializer
 
 
 class ProductListNCreateAPIView(APIView):
@@ -113,10 +113,10 @@ class CartLineListNCreateAPIView(APIView):
         serializer = CartLineOutputSerializer(cartline_list, many=True)
         return Response(serializer.data)
 
-    # def post(self, request, format=None):
-    #     serializer = OrderLineInputSerializer(data=request.data.copy())
-    #     if serializer.is_valid():
-    #         created_orderline = serializer.save()
-    #         output_serializer = OrderLineOutputSerializer(created_orderline)
-    #         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request, format=None):
+        serializer = CartLineInputSerializer(data=request.data.copy())
+        if serializer.is_valid():
+            created_cartline = serializer.save()
+            output_serializer = CartLineOutputSerializer(created_cartline)
+            return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

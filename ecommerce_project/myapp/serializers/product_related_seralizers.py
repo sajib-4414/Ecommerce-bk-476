@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.shortcuts import get_object_or_404
 from ecommerce_project.myapp.models import Product, Category, Company, SellerUser, Review, BuyerUser, Order, OrderLine, \
-    Cart
+    Cart, CartLine
 from ecommerce_project.myapp.serializers.OtherSerializers import CategorySerializer
 from ecommerce_project.myapp.serializers.UserSerializers import CompanyOutputSerializer, SellerOutputSerializer, \
     BuyerOutputSerializer
@@ -160,7 +160,6 @@ class OrderLineInputSerializer(serializers.ModelSerializer):
         order_id = validated_data.pop('order_id')
         orderline = OrderLine.objects.create(**validated_data)
 
-        print("I am here")
         try:
             product = Product.objects.get(pk=product_id)
         except Product.DoesNotExist:
@@ -212,7 +211,6 @@ class CartInputSerializer(serializers.ModelSerializer):
         #so, we add an extra field in the api payload, which will be cut
         # and then cart will be created and we later associate the user with this id in the cart
         user_id = validated_data.pop('user_id')
-        cart = Cart.objects.create(**validated_data)
 
         try:
             buyer_user = BuyerUser.objects.get(pk=user_id)
@@ -221,6 +219,7 @@ class CartInputSerializer(serializers.ModelSerializer):
         if Cart.objects.filter(user=buyer_user).exists():
             raise serializers.ValidationError("userError: Cart already exists for the user")
         else:
+            cart = Cart.objects.create(**validated_data)
             cart.user = buyer_user
 
         cart.save()
@@ -238,3 +237,39 @@ class CartLineOutputSerializer(serializers.ModelSerializer):
 
     def get_pk(self,obj):
         return obj.id
+
+
+class CartLineInputSerializer(serializers.ModelSerializer):
+    product_id = serializers.IntegerField(required=True)
+    cart_id = serializers.IntegerField(required=True)
+    quantity = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = CartLine
+        fields = ['product_id', 'cart_id','quantity']
+
+    def create(self, validated_data):
+        product_id = validated_data.pop('product_id')
+        cart_id = validated_data.pop('cart_id')
+
+
+        try:
+            product = Product.objects.get(pk=product_id)
+        except Product.DoesNotExist:
+            raise serializers.ValidationError("productError: problem with the product for this carline.")
+
+
+        try:
+            cart = Cart.objects.get(pk=cart_id)
+        except Cart.DoesNotExist:
+            raise serializers.ValidationError("cartError: problem with the cart for this cartline.")
+
+        if CartLine.objects.filter(cart=cart, product = product).exists():
+            raise serializers.ValidationError("cartError: This cartline for the product and the cart already exists, update instead of creating")
+        else:
+            cartline = CartLine.objects.create(**validated_data)
+            cartline.product = product
+            cartline.cart = cart
+
+        cartline.save()
+        return cartline
