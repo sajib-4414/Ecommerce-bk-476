@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from ecommerce_project.myapp.models import Review, Order, OrderLine, Cart, CartLine
 from ecommerce_project.myapp.serializers import ReviewOutputSerializer, ReviewInputSerializer
-from ecommerce_project.myapp.serializers.product_related_seralizers import  \
+from ecommerce_project.myapp.serializers.order_serializers import  \
     OrderOutputSerializer, OrderInputSerializer, \
     OrderLineOutputSerializer, OrderLineInputSerializer
 
