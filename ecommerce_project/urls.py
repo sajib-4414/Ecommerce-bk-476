@@ -38,4 +38,5 @@ urlpatterns = [
     path('carts/', views.CartListNCreateAPIView.as_view()),
     path('carts/<int:pk>/', views.CartDetailUpdateDeleteAPIView.as_view()),
     path('cartlines/', views.CartLineListNCreateAPIView.as_view()),
+    path('cartlines/<int:pk>/', views.CartLineDetailUpdateDeleteAPIView.as_view()),
 ]
