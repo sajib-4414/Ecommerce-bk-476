@@ -32,4 +32,5 @@ urlpatterns = [
     path('reviews/', views.ReviewListNCreateAPIView.as_view()),
     path('orders/', views.OrderListNCreateAPIView.as_view()),
     path('order-lines/', views.OrderLineListNCreateAPIView.as_view()),
+    path('carts/', views.CartListNCreateAPIView.as_view()),
 ]
