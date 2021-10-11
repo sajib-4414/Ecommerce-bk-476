@@ -1,4 +1,4 @@
-from .user_views import *
+from .companies_view import *
 from .other_views import *
 from .cart_views import *
 from .product_views import *

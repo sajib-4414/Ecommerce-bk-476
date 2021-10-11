@@ -2,13 +2,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 from ecommerce_project.myapp.models import SellerUser, Company
 from rest_framework.response import Response
-from ecommerce_project.myapp.serializers import  SellerOutputSerializer
 from ecommerce_project.myapp.serializers.company_serializers import   \
       CompanyOutputSerializer, CompanyInputSerializer
-from ecommerce_project.myapp.serializers.seller_serializers import SellerInputSerializer
-
-
-
 
 
 class CompaniesAPIView(APIView):
