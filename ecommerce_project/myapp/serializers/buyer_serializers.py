@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from ecommerce_project.myapp.models import BuyerUser, Address
-from ecommerce_project.myapp.serializers.OtherSerializers import AddressSerializer
+from ecommerce_project.myapp.serializers.other_serializers import AddressSerializer
 
 
 class BuyerOutputSerializer(serializers.ModelSerializer):

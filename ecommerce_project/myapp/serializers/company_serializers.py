@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from ecommerce_project.myapp.models import Address, Company
-from ecommerce_project.myapp.serializers.OtherSerializers import AddressSerializer
+from ecommerce_project.myapp.serializers.other_serializers import AddressSerializer
 
 
 class CompanyOutputSerializer(serializers.ModelSerializer):

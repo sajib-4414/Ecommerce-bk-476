@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from ecommerce_project.myapp.models import Address, Category
-from ecommerce_project.myapp.serializers.OtherSerializers import AddressSerializer, CategorySerializer
+from ecommerce_project.myapp.serializers.other_serializers import AddressSerializer, CategorySerializer
 
 
 class AddressListNCreateAPIView(APIView):
