@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from ecommerce_project.myapp.models import Product
 from ecommerce_project.myapp.serializers.product_related_seralizers import ProductOutputSerializer, \
     ProductInputSerializer
+from ecommerce_project.myapp.serializers.product_serializers import ProductUpdateSerializer
 
 
 def get_product_object(pk):
@@ -44,15 +45,16 @@ class ProductDetailUpdateDeleteAPIView(APIView):
         serializer = ProductOutputSerializer(product)
         return Response(serializer.data)
 
-    # def put(self, request, pk, format=None):
-    #     post = get_product_object(pk)
-    #     validate_if_post_or_comment_owner_logged_in(request, post)
-    #     serializer = PostUpdateSerializer(post, data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    #
+    def put(self, request, pk, format=None):
+        product = get_product_object(pk)
+        # validate_if_post_or_comment_owner_logged_in(request, post)
+        serializer = ProductUpdateSerializer(product, data=request.data)
+        if serializer.is_valid():
+            updated_product = serializer.save()
+            output_serializer = ProductOutputSerializer(updated_product)
+            return Response(output_serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def delete(self, request, pk, format=None):
         product = get_product_object(pk)
         # validate_if_post_or_comment_owner_logged_in(request, post)
