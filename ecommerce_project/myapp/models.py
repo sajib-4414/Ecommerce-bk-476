@@ -31,7 +31,7 @@ class BuyerUser(models.Model):
     password = models.CharField(max_length=30)
     address = models.OneToOneField(
         Address,
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         related_name='address_of',
         null=True
     )
@@ -57,7 +57,7 @@ class Company(models.Model):
     company_username = models.CharField(max_length=50,null=True)
     address = models.OneToOneField(
         Address,
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         related_name='company_address_of',
         null=True
     )
