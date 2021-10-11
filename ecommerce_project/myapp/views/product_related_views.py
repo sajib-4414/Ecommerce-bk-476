@@ -5,8 +5,7 @@ from ecommerce_project.myapp.models import Review, Order, OrderLine, Cart, CartL
 from ecommerce_project.myapp.serializers import ReviewOutputSerializer, ReviewInputSerializer
 from ecommerce_project.myapp.serializers.product_related_seralizers import  \
     OrderOutputSerializer, OrderInputSerializer, \
-    OrderLineOutputSerializer, OrderLineInputSerializer, CartOutputSerializer, CartInputSerializer, \
-    CartLineOutputSerializer, CartLineInputSerializer
+    OrderLineOutputSerializer, OrderLineInputSerializer
 
 
 
