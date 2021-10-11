@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from ecommerce_project.myapp.models import Product, Review, Order, OrderLine, Cart, CartLine
-from ecommerce_project.myapp.serializers.product_related_seralizers import ProductOutputSerializer, \
-    ProductInputSerializer, ReviewOutputSerializer, ReviewInputSerializer, OrderOutputSerializer, OrderInputSerializer, \
+from ecommerce_project.myapp.serializers.product_related_seralizers import  \
+     ReviewOutputSerializer, ReviewInputSerializer, OrderOutputSerializer, OrderInputSerializer, \
     OrderLineOutputSerializer, OrderLineInputSerializer, CartOutputSerializer, CartInputSerializer, \
     CartLineOutputSerializer, CartLineInputSerializer
 

@@ -3,9 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from ecommerce_project.myapp.models import Product
-from ecommerce_project.myapp.serializers.product_related_seralizers import ProductOutputSerializer, \
-    ProductInputSerializer
-from ecommerce_project.myapp.serializers.product_serializers import ProductUpdateSerializer
+from ecommerce_project.myapp.serializers import ProductUpdateSerializer, ProductInputSerializer, ProductOutputSerializer
 
 
 def get_product_object(pk):
