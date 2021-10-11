@@ -225,3 +225,16 @@ class CartInputSerializer(serializers.ModelSerializer):
 
         cart.save()
         return cart
+
+
+class CartLineOutputSerializer(serializers.ModelSerializer):
+    pk = serializers.SerializerMethodField()
+    product = ProductOutputSerializer()
+    cart = CartOutputSerializer()
+
+    class Meta:
+        model = OrderLine
+        fields = ['product', 'cart', 'quantity', 'pk']
+
+    def get_pk(self,obj):
+        return obj.id
