@@ -26,6 +26,7 @@ urlpatterns = [
     path('buyers/', views.BuyersUserAPIView.as_view()),
     path('buyers/<int:pk>/', views.BuyerDetailUpdateDeleteAPIView.as_view()),
     path('sellers/', views.SellersUserAPIView.as_view()),
+    path('sellers/<int:pk>/', views.SellerDetailUpdateDeleteAPIView.as_view()),
     path('companies/', views.CompaniesAPIView.as_view()),
     path('companies/<int:pk>/', views.CompaniesDetailUpdateDeleteAPIView.as_view()),
     path('addresses/', views.AddressListNCreateAPIView.as_view()),
