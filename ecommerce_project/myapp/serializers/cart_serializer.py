@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import serializers
 from ecommerce_project.myapp.models import Cart, BuyerUser, OrderLine, CartLine, Product
 from ecommerce_project.myapp.serializers import BuyerOutputSerializer, ProductOutputSerializer
@@ -98,3 +99,51 @@ class CartLineInputSerializer(serializers.ModelSerializer):
 
         cartline.save()
         return cartline
+
+
+class CartUpdateSerializer(serializers.Serializer):
+    unique_id = serializers.CharField(required=False,max_length=50)
+    user_id = serializers.IntegerField(required=False)
+    pk = serializers.SerializerMethodField()
+    """
+    A serializer can either implement create or update methods or both, as per django rest docs. 
+    """
+    def update(self, instance, validated_data):
+
+        if 'unique_id' in validated_data:
+            instance.unique_id = validated_data.get('unique_id', instance.unique_id)
+        if 'user_id' in validated_data:
+            #wants to update user, have to check if the user is a valid one
+            user_id = validated_data.pop('user_id')
+            try:
+                buyer_user = BuyerUser.objects.get(pk=user_id)
+            except BuyerUser.DoesNotExist:
+                raise serializers.ValidationError("userError: problem with the user for this cart.")
+            #also check if that user has a cart already
+            #this means, a cart can be only updated to include a user, if that user does not have a cart alraedy
+            if Cart.objects.filter(user=buyer_user).exists():
+                raise serializers.ValidationError("userError: problem with the user for this cart.")
+            else:
+                instance.user = buyer_user
+
+        instance.save()
+        return instance
+
+    def validate(self, data):
+        """
+        This method can be used later to add any validation, the example here is to demonstrate one validation
+        Check that the remind me date is before the before due date.
+        """
+        # print(data['remind_me_datetime'])
+        # if 'remind_me_datetime' in data:
+        #     if 'due_datetime' in data:
+        #         if not (data['due_datetime'] > data['remind_me_datetime']):
+        #             raise serializers.ValidationError({"remind_me_date": "Reminder date has to be before due date"})
+        #     else:
+        #         instance = getattr(self, 'instance', None)
+        #         if not (instance.due_datetime > data['remind_me_datetime']):
+        #             raise serializers.ValidationError({"remind_me_date": "Reminder date has to be before due date"})
+        return data
+
+    def get_pk(self,obj):
+        return obj.id
