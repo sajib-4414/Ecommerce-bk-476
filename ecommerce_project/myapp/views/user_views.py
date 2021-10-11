@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from ecommerce_project.myapp.models import BuyerUser, SellerUser, Company
 from rest_framework.response import Response
 from ecommerce_project.myapp.serializers import BuyerOutputSerializer, SellerOutputSerializer
-from ecommerce_project.myapp.serializers.UserSerializers import   \
+from ecommerce_project.myapp.serializers.company_serializers import   \
       CompanyOutputSerializer, CompanyInputSerializer
 from ecommerce_project.myapp.serializers.buyer_serializers import BuyerInputSerializer
 from ecommerce_project.myapp.serializers.seller_serializers import SellerInputSerializer

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from ecommerce_project.myapp.models import Category, Company, SellerUser, Product
 from ecommerce_project.myapp.serializers.seller_serializers import SellerOutputSerializer
 from ecommerce_project.myapp.serializers.OtherSerializers import CategorySerializer
-from ecommerce_project.myapp.serializers.UserSerializers import CompanyOutputSerializer
+from ecommerce_project.myapp.serializers.company_serializers import CompanyOutputSerializer
 
 
 class ProductUpdateSerializer(serializers.Serializer):
