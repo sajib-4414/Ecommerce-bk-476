@@ -31,8 +31,9 @@ class BuyerUser(models.Model):
     password = models.CharField(max_length=30)
     address = models.OneToOneField(
         Address,
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         related_name='address_of',
+        null=True
     )
 
     def __str__(self):
@@ -40,12 +41,25 @@ class BuyerUser(models.Model):
         return data
 
 
+class SellerUser(models.Model):
+    name = models.CharField(max_length=200)
+    email = models.CharField(max_length=30)
+    password = models.CharField(max_length=50)
+    photoIdNum = models.CharField(max_length=50)
+
+    def __str__(self):
+        data = self.name
+        return data
+
+
 class Company(models.Model):
     CompanyName = models.CharField(max_length=100)
+    company_username = models.CharField(max_length=50,null=True)
     address = models.OneToOneField(
         Address,
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         related_name='company_address_of',
+        null=True
     )
 
     def __str__(self):
@@ -61,11 +75,19 @@ class Product(models.Model):
         Category,
         on_delete=models.CASCADE,
         related_name='category_of',
+        null=True
     )
     company = models.ForeignKey(
         Company,
         on_delete=models.CASCADE,
         related_name='company_of',
+        null=True
+    )
+    seller = models.ForeignKey(
+        SellerUser,
+        on_delete=models.CASCADE,
+        related_name='seller_of',
+        null=True
     )
     delivery_cost = models.FloatField()
     # cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='products')
@@ -77,7 +99,7 @@ class Product(models.Model):
 
 class Review(models.Model):
     description = models.CharField(max_length=200)
-    user = models.ForeignKey(BuyerUser, on_delete=models.CASCADE, related_name='reviews_of')
+    user = models.ForeignKey(BuyerUser, on_delete=models.CASCADE, related_name='reviews_of', null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews_of', null=True)
 
     def __str__(self):
@@ -97,15 +119,16 @@ class Cart(models.Model):
 
 
 class CartLine(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True, blank=True)
+    quantity = models.IntegerField(default=1)
 
     def __str__(self):
         return "Cart item of " + self.product.name
 
 
 class Order(models.Model):
-    buyer = models.ForeignKey(BuyerUser, on_delete=models.CASCADE, related_name='orders_of')
+    buyer = models.ForeignKey(BuyerUser, on_delete=models.CASCADE, related_name='orders_of', null=True)
     # products = models.ManyToManyField(Product, blank=True)
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     value = models.FloatField()
@@ -116,8 +139,9 @@ class Order(models.Model):
 
 
 class OrderLine(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
+    quantity = models.IntegerField(default=1)
 
     def __str__(self):
         return "Order item of the product" + self.product.name

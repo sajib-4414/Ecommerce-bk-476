@@ -16,10 +16,33 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+from ecommerce_project.myapp import views
 
 router = routers.DefaultRouter()
 
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
+    path('buyers/', views.BuyersUserAPIView.as_view()),
+    path('buyers/<int:pk>/', views.BuyerDetailUpdateDeleteAPIView.as_view()),
+    path('sellers/', views.SellersUserAPIView.as_view()),
+    path('sellers/<int:pk>/', views.SellerDetailUpdateDeleteAPIView.as_view()),
+    path('companies/', views.CompaniesAPIView.as_view()),
+    path('companies/<int:pk>/', views.CompaniesDetailUpdateDeleteAPIView.as_view()),
+    path('addresses/', views.AddressListNCreateAPIView.as_view()),
+    path('addresses/<int:pk>/', views.AddressDetailUpdateDeleteAPIView.as_view()),
+    path('categories/', views.CategoryListNCreateAPIView.as_view()),
+    path('categories/<int:pk>/', views.CategoryDetailUpdateDeleteAPIView.as_view()),
+    path('products/', views.ProductListNCreateAPIView.as_view()),
+    path('products/<int:pk>/', views.ProductDetailUpdateDeleteAPIView.as_view()),
+    path('reviews/', views.ReviewListNCreateAPIView.as_view()),
+    path('reviews/<int:pk>/', views.ReviewDetailUpdateDeleteAPIView.as_view()),
+    path('orders/', views.OrderListNCreateAPIView.as_view()),
+    path('orders/<int:pk>/', views.OrderDetailUpdateDeleteAPIView.as_view()),
+    path('order-lines/', views.OrderLineListNCreateAPIView.as_view()),
+    path('order-lines/<int:pk>/', views.OrderLineDetailUpdateDeleteAPIView.as_view()),
+    path('carts/', views.CartListNCreateAPIView.as_view()),
+    path('carts/<int:pk>/', views.CartDetailUpdateDeleteAPIView.as_view()),
+    path('cartlines/', views.CartLineListNCreateAPIView.as_view()),
+    path('cartlines/<int:pk>/', views.CartLineDetailUpdateDeleteAPIView.as_view()),
 ]
