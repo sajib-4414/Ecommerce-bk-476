@@ -203,3 +203,17 @@ class CartLineUpdateSerializer(serializers.Serializer):
     def get_pk(self,obj):
         return obj.id
 
+
+class CartWithLinesOutputSerializer(serializers.ModelSerializer):
+    #just adding cartlines won't work, if you do not specify related name
+    # as cartlines in the cart model
+    cartlines = CartLineOutputSerializer(many=True, read_only=True)
+    user = BuyerOutputSerializer()
+    pk = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Cart
+        fields = ('unique_id', 'user','cartlines','pk')
+
+    def get_pk(self,obj):
+        return obj.id

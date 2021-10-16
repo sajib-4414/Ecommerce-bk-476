@@ -43,6 +43,7 @@ urlpatterns = [
     path('order-lines/<int:pk>/', views.OrderLineDetailUpdateDeleteAPIView.as_view()),
     path('carts/', views.CartListNCreateAPIView.as_view()),
     path('carts/<int:pk>/', views.CartDetailUpdateDeleteAPIView.as_view()),
+    path('cart-carlines-by-user/<int:user_id>/', views.CartlWithCartLinesForUserAPIView.as_view()),
     path('cartlines/', views.CartLineListNCreateAPIView.as_view()),
     path('cartlines/<int:pk>/', views.CartLineDetailUpdateDeleteAPIView.as_view()),
 ]

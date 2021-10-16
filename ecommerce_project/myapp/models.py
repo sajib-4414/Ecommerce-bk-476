@@ -120,7 +120,7 @@ class Cart(models.Model):
 
 class CartLine(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True, blank=True)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name= 'cartlines', null=True, blank=True)
     quantity = models.IntegerField(default=1)
 
     def __str__(self):

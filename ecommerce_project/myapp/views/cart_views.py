@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from ecommerce_project.myapp.models import Cart, CartLine
 from ecommerce_project.myapp.serializers import CartOutputSerializer, \
     CartInputSerializer, CartLineOutputSerializer, CartLineInputSerializer, CartUpdateSerializer, \
-    CartLineUpdateSerializer
+    CartLineUpdateSerializer, CartWithLinesOutputSerializer
 
 
 def get_cart_object(pk):
@@ -112,3 +112,15 @@ class CartLineDetailUpdateDeleteAPIView(APIView):
         # validate_if_post_or_comment_owner_logged_in(request, post)
         cartline.delete()
         return Response({"delete": "delete success"},status=status.HTTP_204_NO_CONTENT)
+
+
+class CartlWithCartLinesForUserAPIView(APIView):
+    """
+    Retrieve, update or delete a object instance.
+    """
+    # permission_classes = [IsAuthenticated]
+
+    def get(self, request, user_id, format=None):
+        cart = Cart.objects.get(user_id=user_id)
+        serializer = CartWithLinesOutputSerializer(cart)
+        return Response(serializer.data)
