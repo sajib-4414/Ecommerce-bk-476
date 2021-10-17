@@ -133,6 +133,10 @@ class Order(models.Model):
     # products = models.ManyToManyField(Product, blank=True)
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     value = models.FloatField()
+    billing_firstname = models.CharField(max_length=100, null=True)
+    billing_lastname = models.CharField(max_length=100, null=True)
+    billing_email = models.CharField(max_length=100, null=True)
+    billing_contact_number = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         data = "Order of buyer "+ self.buyer.full_name

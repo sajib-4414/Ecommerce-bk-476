@@ -10,7 +10,7 @@ class OrderOutputSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['buyer', 'date','value', 'pk']
+        fields = ['buyer', 'date','value', 'billing_firstname', 'billing_lastname', 'billing_email', 'billing_contact_number','pk']
 
     def get_pk(self,obj):
         return obj.id
@@ -18,10 +18,14 @@ class OrderOutputSerializer(serializers.ModelSerializer):
 
 class OrderInputSerializer(serializers.ModelSerializer):
     buyer_user_id = serializers.IntegerField(required=True)
+    billing_firstname = serializers.CharField(required=True, max_length=100)
+    billing_lastname = serializers.CharField(required=True, max_length=100)
+    billing_email = serializers.CharField(required=True, max_length=100)
+    billing_contact_number = serializers.CharField(required=True, max_length=100)
 
     class Meta:
         model = Order
-        fields = ['buyer_user_id', 'value']
+        fields = ['buyer_user_id', 'billing_firstname', 'billing_lastname', 'billing_email', 'billing_contact_number', 'value']
 
     def create(self, validated_data):
         buyer_user_id = validated_data.pop('buyer_user_id')
@@ -83,6 +87,10 @@ class OrderLineInputSerializer(serializers.ModelSerializer):
 class OrderUpdateSerializer(serializers.Serializer):
     value = serializers.FloatField(required=False)
     buyer_id = serializers.IntegerField(required=False)
+    billing_firstname = serializers.CharField(required=False, max_length=100)
+    billing_lastname = serializers.CharField(required=False, max_length=100)
+    billing_email = serializers.CharField(required=False, max_length=100)
+    billing_contact_number = serializers.CharField(required=False, max_length=100)
     pk = serializers.SerializerMethodField()
     """
     A serializer can either implement create or update methods or both, as per django rest docs. 
@@ -91,6 +99,14 @@ class OrderUpdateSerializer(serializers.Serializer):
 
         if 'value' in validated_data:
             instance.value = validated_data.get('value', instance.value)
+        if 'billing_firstname' in validated_data:
+            instance.billing_firstname = validated_data.get('billing_firstname', instance.billing_firstname)
+        if 'billing_lastname' in validated_data:
+            instance.billing_lastname = validated_data.get('billing_lastname', instance.billing_lastname)
+        if 'billing_email' in validated_data:
+            instance.billing_email = validated_data.get('billing_email', instance.billing_email)
+        if 'billing_contact_number' in validated_data:
+            instance.billing_contact_number = validated_data.get('billing_contact_number', instance.billing_contact_number)
         if 'buyer_id' in validated_data:
             #wants to update user, have to check if the user is a valid one
             buyer_id = validated_data.pop('buyer_id')
