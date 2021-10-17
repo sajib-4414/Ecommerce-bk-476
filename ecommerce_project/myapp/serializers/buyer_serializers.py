@@ -48,8 +48,10 @@ class BuyerUpdateSerializer(serializers.Serializer):
     """
     def update(self, instance, validated_data):
 
-        if 'full_name' in validated_data:
-            instance.full_name = validated_data.get('full_name', instance.full_name)
+        if 'first_name' in validated_data:
+            instance.first_name = validated_data.get('first_name', instance.first_name)
+        if 'last_name' in validated_data:
+            instance.last_name = validated_data.get('last_name', instance.last_name)
         if 'email' in validated_data:
             instance.email = validated_data.get('email', instance.email)
         if 'username' in validated_data:
