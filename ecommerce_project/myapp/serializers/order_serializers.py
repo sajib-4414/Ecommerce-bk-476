@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ecommerce_project.myapp.models import Product, BuyerUser, Order, OrderLine
+from ecommerce_project.myapp.models import Product, BuyerUser, Order, OrderLine, Cart
 from ecommerce_project.myapp.serializers import BuyerOutputSerializer
 from ecommerce_project.myapp.serializers.product_serializers import ProductOutputSerializer
 
@@ -193,3 +193,17 @@ class OrderLineUpdateSerializer(serializers.Serializer):
     def get_pk(self,obj):
         return obj.id
 
+
+class OrderWithLinesOutputSerializer(serializers.ModelSerializer):
+    #just adding cartlines won't work, if you do not specify related name
+    # as cartlines in the cartline model
+    orderlines = OrderLineOutputSerializer(many=True, read_only=True)
+    buyer = BuyerOutputSerializer()
+    pk = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Order
+        fields = ('buyer', 'billing_firstname', 'billing_lastname', 'billing_email', 'billing_contact_number', 'orderlines','value')
+
+    def get_pk(self,obj):
+        return obj.id
