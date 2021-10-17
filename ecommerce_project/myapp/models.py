@@ -25,7 +25,8 @@ class BuyerUser(models.Model):
     delete dependencies upon object deletion
     pending
     """
-    full_name = models.CharField(max_length=300)
+    first_name = models.CharField(max_length=100, null=True)
+    last_name = models.CharField(max_length=100, null=True)
     email = models.CharField(max_length=50)
     username = models.CharField(max_length=30)
     password = models.CharField(max_length=30)
