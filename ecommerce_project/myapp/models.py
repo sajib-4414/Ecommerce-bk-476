@@ -68,7 +68,7 @@ class User(AbstractBaseUser):
     last_name = models.CharField(max_length=100, null=True)
     photoIdNum = models.CharField(max_length=50,null=True,blank=True)
     # email = models.CharField(max_length=50)
-    # username = models.CharField(max_length=30)
+    username = models.CharField(max_length=30,null=True)
     # password = models.CharField(max_length=30)
     address = models.OneToOneField(
         Address,

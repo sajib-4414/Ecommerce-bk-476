@@ -3,13 +3,16 @@ from rest_framework import serializers
 from ecommerce_project.myapp.models import BuyerUser, Address
 from ecommerce_project.myapp.serializers.other_serializers import AddressSerializer
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 
 class BuyerOutputSerializer(serializers.ModelSerializer):
     pk = serializers.SerializerMethodField()
     address = AddressSerializer()
 
     class Meta:
-        model = BuyerUser
+        model = User
         fields = ['first_name', 'last_name', 'email','username','address','pk']
 
     def get_pk(self,obj):
