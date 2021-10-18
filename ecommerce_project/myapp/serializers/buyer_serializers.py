@@ -60,7 +60,7 @@ class BuyerUpdateSerializer(serializers.Serializer):
         if 'username' in validated_data:
             instance.username = validated_data.get('username', instance.username)
         if 'password' in validated_data:
-            instance.password = validated_data.get('password', instance.password)
+            instance.set_password(validated_data.get('password'))
         if 'address' in validated_data:
             address_data = validated_data.pop('address')
             #check if the user already have an address

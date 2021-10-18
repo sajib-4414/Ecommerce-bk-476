@@ -10,7 +10,7 @@ User = get_user_model()
 
 def get_buyer_user_object(pk):
     try:
-        return BuyerUser.objects.get(pk=pk)
+        return User.objects.get(pk=pk)
     except BuyerUser.DoesNotExist:
         raise Http404
 
