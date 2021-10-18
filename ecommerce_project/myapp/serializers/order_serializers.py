@@ -1,7 +1,7 @@
 import uuid
 
 from rest_framework import serializers
-from ecommerce_project.myapp.models import Product, BuyerUser, Order, OrderLine, Cart
+from ecommerce_project.myapp.models import Product, BuyerUser, Order, OrderLine, Cart, CartLine
 from ecommerce_project.myapp.serializers import BuyerOutputSerializer
 from ecommerce_project.myapp.serializers.product_serializers import ProductOutputSerializer
 
@@ -44,6 +44,15 @@ class OrderInputSerializer(serializers.ModelSerializer):
         order.buyer = buyer_user
 
         order.save()
+        #now move the cartlines to orderlines ,associate with this order and remove cartlines
+        user_cart = Cart.objects.get(user_id=buyer_user_id)
+        cartlines = CartLine.objects.filter(cart_id=user_cart.id)
+        if cartlines:
+            #means not empty, means there are cartlines
+            for cartline in cartlines:
+                orderline = OrderLine.objects.create(order_id=order.id, product_id=cartline.product.id,quantity=cartline.quantity)
+            #now delete the cartlines
+            CartLine.objects.filter(cart_id=user_cart.id).delete()
         return order
 
 
