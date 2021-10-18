@@ -215,12 +215,14 @@ class Review(models.Model):
         data = (self.description[:25] + '..') if len(self.description) > 25 else self.description
         return data
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class Cart(models.Model):
     unique_id = models.CharField(max_length=50, null=True)
     # products = models.ManyToManyField(Product, related_name='carts_where_this_product', blank=True)
     # cart_lines = models.ForeignKey(CartLine, on_delete=models.CASCADE, null=True, blank=True)
-    user = models.OneToOneField(BuyerUser,on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(User,on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         data = self.unique_id
@@ -235,8 +237,6 @@ class CartLine(models.Model):
     # def __str__(self):
     #     return "Cart item of " + self.cart.unique_id
 
-from django.contrib.auth import get_user_model
-User = get_user_model()
 class Order(models.Model):
     unique_order_id = models.CharField(null=True,max_length=100)
     buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders_of', null=True)
