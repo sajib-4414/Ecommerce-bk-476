@@ -175,6 +175,8 @@ class Company(models.Model):
         data = self.CompanyName
         return data
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
@@ -193,7 +195,7 @@ class Product(models.Model):
         null=True
     )
     seller = models.ForeignKey(
-        SellerUser,
+        User,
         on_delete=models.CASCADE,
         related_name='seller_of',
         null=True
@@ -205,8 +207,6 @@ class Product(models.Model):
         data = self.name
         return data
 
-from django.contrib.auth import get_user_model
-User = get_user_model()
 
 class Review(models.Model):
     description = models.CharField(max_length=200)
