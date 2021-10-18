@@ -23,15 +23,15 @@ class BuyerInputSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(max_length=100, required=True)
     last_name = serializers.CharField(max_length=100, required=True)
     password = serializers.CharField(write_only=True)
-    address = AddressSerializer()
+    address = AddressSerializer(required=True)
 
     class Meta:
-        model = BuyerUser
+        model = User
         fields = ('first_name','last_name', 'email', 'username', 'password','address')
 
     def create(self, validated_data):
         address_data = validated_data.pop('address')
-        user = BuyerUser.objects.create(**validated_data)
+        user = User.objects.create(**validated_data)
         address = Address.objects.create(**address_data)
         user.address = address
         user.save()
