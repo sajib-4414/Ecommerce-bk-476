@@ -3,7 +3,7 @@ import uuid
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from ecommerce_project.myapp.models import Product, BuyerUser, Order, OrderLine, Cart, CartLine
+from ecommerce_project.myapp.models import Product, Order, OrderLine, Cart, CartLine
 from ecommerce_project.myapp.serializers import BuyerOutputSerializer
 from ecommerce_project.myapp.serializers.product_serializers import ProductOutputSerializer
 

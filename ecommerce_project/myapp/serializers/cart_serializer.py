@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ecommerce_project.myapp.models import Cart, BuyerUser, OrderLine, CartLine, Product
+from ecommerce_project.myapp.models import Cart, OrderLine, CartLine, Product
 from ecommerce_project.myapp.serializers import BuyerOutputSerializer, ProductOutputSerializer
 
 from django.contrib.auth import get_user_model

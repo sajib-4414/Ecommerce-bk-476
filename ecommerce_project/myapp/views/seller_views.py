@@ -2,7 +2,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from ecommerce_project.myapp.models import SellerUser
 from ecommerce_project.myapp.serializers import SellerOutputSerializer
 from ecommerce_project.myapp.serializers.seller_serializers import SellerInputSerializer, SellerUpdateSerializer
 

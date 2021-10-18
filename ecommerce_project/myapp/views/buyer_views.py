@@ -2,7 +2,6 @@ from django.http import Http404
 from rest_framework import status, serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from ecommerce_project.myapp.models import BuyerUser
 from ecommerce_project.myapp.serializers import BuyerOutputSerializer
 from ecommerce_project.myapp.serializers.buyer_serializers import BuyerInputSerializer, BuyerUpdateSerializer
 from django.contrib.auth import get_user_model
@@ -11,7 +10,7 @@ User = get_user_model()
 def get_buyer_user_object(pk):
     try:
         return User.objects.get(pk=pk)
-    except BuyerUser.DoesNotExist:
+    except User.DoesNotExist:
         raise Http404
 
 

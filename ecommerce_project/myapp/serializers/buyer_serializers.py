@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ecommerce_project.myapp.models import BuyerUser, Address
+from ecommerce_project.myapp.models import Address
 from ecommerce_project.myapp.serializers.other_serializers import AddressSerializer
 
 from django.contrib.auth import get_user_model
@@ -23,6 +23,7 @@ class BuyerInputSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(max_length=100, required=True)
     last_name = serializers.CharField(max_length=100, required=True)
     password = serializers.CharField(write_only=True)
+    username = serializers.CharField(max_length=100,required=True)
     address = AddressSerializer(required=True)
 
     class Meta:

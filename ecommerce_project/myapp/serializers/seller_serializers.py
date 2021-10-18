@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from ecommerce_project.myapp.models import SellerUser
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -8,22 +7,24 @@ User = get_user_model()
 class SellerOutputSerializer(serializers.ModelSerializer):
     pk = serializers.SerializerMethodField()
     photo_id_num = serializers.CharField(source='photoIdNum')  # Changing the model's name
-    name = serializers.SerializerMethodField()
+    # name = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('name', 'email','photo_id_num', 'pk')
+        fields = ('first_name','last_name', 'email','photo_id_num', 'pk')
 
     def get_pk(self,obj):
         return obj.id
 
-    def get_name(self,obj):
-        return obj.first_name+" "+obj.last_name
+    # def get_name(self,obj):
+    #     return obj.first_name+" "+obj.last_name
 
 
 class SellerInputSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(max_length=100, required=True)
+    last_name = serializers.CharField(max_length=100, required=True)
     password = serializers.CharField(write_only=True)
-    photo_id_num = serializers.CharField(source='photoIdNum') #Changing the model's name in API input field
+    photo_id_num = serializers.CharField(source='photoIdNum',required=True) #Changing the model's name in API input field
 
     class Meta:
         model = User

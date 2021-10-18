@@ -126,39 +126,39 @@ class Category(models.Model):
         return data
 
 
-class BuyerUser(models.Model):
-    """
-    delete dependencies upon object deletion
-    pending
-    """
-    # user = models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True, default=None)
-    first_name = models.CharField(max_length=100, null=True)
-    last_name = models.CharField(max_length=100, null=True)
-    email = models.CharField(max_length=50)
-    username = models.CharField(max_length=30)
-    password = models.CharField(max_length=30)
-    address = models.OneToOneField(
-        Address,
-        on_delete=models.DO_NOTHING,
-        related_name='address_of',
-        null=True
-    )
+# class BuyerUser(models.Model):
+#     """
+#     delete dependencies upon object deletion
+#     pending
+#     """
+#     # user = models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True, default=None)
+#     first_name = models.CharField(max_length=100, null=True)
+#     last_name = models.CharField(max_length=100, null=True)
+#     email = models.CharField(max_length=50)
+#     username = models.CharField(max_length=30)
+#     password = models.CharField(max_length=30)
+#     address = models.OneToOneField(
+#         Address,
+#         on_delete=models.DO_NOTHING,
+#         related_name='address_of',
+#         null=True
+#     )
+#
+#     def __str__(self):
+#         data = self.first_name + ' '+ self.last_name
+#         return data
 
-    def __str__(self):
-        data = self.first_name + ' '+ self.last_name
-        return data
 
-
-class SellerUser(models.Model):
-    # user = models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True, default=None)
-    name = models.CharField(max_length=200)
-    email = models.CharField(max_length=30)
-    password = models.CharField(max_length=50)
-    photoIdNum = models.CharField(max_length=50)
-
-    def __str__(self):
-        data = self.name
-        return data
+# class SellerUser(models.Model):
+#     # user = models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True, default=None)
+#     name = models.CharField(max_length=200)
+#     email = models.CharField(max_length=30)
+#     password = models.CharField(max_length=50)
+#     photoIdNum = models.CharField(max_length=50)
+#
+#     def __str__(self):
+#         data = self.name
+#         return data
 
 
 class Company(models.Model):
