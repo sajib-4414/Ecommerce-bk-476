@@ -117,3 +117,15 @@ class OrderWithOrderLinesByUserAPIView(APIView):
             raise Http404
         serializer = OrderWithLinesForUserOutputSerializer(order_list, many=True)
         return Response(serializer.data)
+
+
+class OrderDetailWithOrderLinesUpdateDeleteAPIView(APIView):
+    """
+    Retrieve, update or delete a object instance.
+    """
+    # permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk, format=None):
+        order = get_object_or_404(Order, pk=pk)
+        serializer = OrderWithLinesForUserOutputSerializer(order)
+        return Response(serializer.data)

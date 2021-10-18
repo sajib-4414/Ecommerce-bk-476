@@ -39,6 +39,7 @@ urlpatterns = [
     path('reviews/<int:pk>/', views.ReviewDetailUpdateDeleteAPIView.as_view()),
     path('orders/', views.OrderListNCreateAPIView.as_view()),
     path('orders/<int:pk>/', views.OrderDetailUpdateDeleteAPIView.as_view()),
+    path('order-with-orderlines/<int:pk>/', views.OrderDetailWithOrderLinesUpdateDeleteAPIView.as_view()),
     path('order-lines/', views.OrderLineListNCreateAPIView.as_view()),
     path('order-lines/<int:pk>/', views.OrderLineDetailUpdateDeleteAPIView.as_view()),
     path('order-orderlines-by-user/<int:user_id>/', views.OrderWithOrderLinesByUserAPIView.as_view()),

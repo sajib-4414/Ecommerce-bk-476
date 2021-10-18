@@ -229,6 +229,7 @@ class OrderWithLinesForUserOutputSerializer(serializers.ModelSerializer):
 
     def get_pk(self,obj):
         return obj.id
+
     def get_quantity(self,obj):
         order_object = obj
         orderlines = OrderLine.objects.filter(order_id=order_object.id)
