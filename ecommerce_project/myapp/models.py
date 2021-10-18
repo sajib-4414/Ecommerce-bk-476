@@ -38,7 +38,7 @@ class BuyerUser(models.Model):
     )
 
     def __str__(self):
-        data = self.full_name
+        data = self.first_name + ' '+ self.last_name
         return data
 
 
@@ -124,8 +124,8 @@ class CartLine(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name= 'cartlines', null=True, blank=True)
     quantity = models.IntegerField(default=1)
 
-    def __str__(self):
-        return "Cart item of " + self.product.name
+    # def __str__(self):
+    #     return "Cart item of " + self.cart.unique_id
 
 
 class Order(models.Model):
@@ -141,7 +141,7 @@ class Order(models.Model):
     delivered = models.BooleanField(default=False)
 
     def __str__(self):
-        data = "Order of buyer "+ self.buyer.full_name
+        data = "Order of buyer "+ self.buyer.first_name+" "+self.buyer.last_name
         return data
 
 
