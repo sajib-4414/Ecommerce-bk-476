@@ -1,7 +1,11 @@
+import uuid
+
 from rest_framework import serializers
 from ecommerce_project.myapp.models import Product, BuyerUser, Order, OrderLine, Cart
 from ecommerce_project.myapp.serializers import BuyerOutputSerializer
 from ecommerce_project.myapp.serializers.product_serializers import ProductOutputSerializer
+
+order_output_fields = ['unique_order_id','buyer', 'date','value', 'billing_firstname', 'billing_lastname', 'billing_email', 'billing_contact_number','delivered','pk']
 
 
 class OrderOutputSerializer(serializers.ModelSerializer):
@@ -10,7 +14,7 @@ class OrderOutputSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['buyer', 'date','value', 'billing_firstname', 'billing_lastname', 'billing_email', 'billing_contact_number','pk']
+        fields = order_output_fields
 
     def get_pk(self,obj):
         return obj.id
@@ -25,11 +29,13 @@ class OrderInputSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['buyer_user_id', 'billing_firstname', 'billing_lastname', 'billing_email', 'billing_contact_number', 'value']
+        fields = ['buyer_user_id', 'billing_firstname', 'billing_lastname', 'billing_email', 'billing_contact_number', 'value','delivered']
 
     def create(self, validated_data):
         buyer_user_id = validated_data.pop('buyer_user_id')
         order = Order.objects.create(**validated_data)
+        order.unique_order_id = uuid.uuid4().hex[:6].upper()
+        order.save()
 
         try:
             buyer_user = BuyerUser.objects.get(pk=buyer_user_id)
@@ -107,6 +113,8 @@ class OrderUpdateSerializer(serializers.Serializer):
             instance.billing_email = validated_data.get('billing_email', instance.billing_email)
         if 'billing_contact_number' in validated_data:
             instance.billing_contact_number = validated_data.get('billing_contact_number', instance.billing_contact_number)
+        if 'delivered' in validated_data:
+            instance.delivered = validated_data.get('delivered', instance.delivered)
         if 'buyer_id' in validated_data:
             #wants to update user, have to check if the user is a valid one
             buyer_id = validated_data.pop('buyer_id')
@@ -203,7 +211,7 @@ class OrderWithLinesOutputSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ('buyer', 'billing_firstname', 'billing_lastname', 'billing_email', 'billing_contact_number', 'orderlines','value')
+        fields = order_output_fields
 
     def get_pk(self,obj):
         return obj.id

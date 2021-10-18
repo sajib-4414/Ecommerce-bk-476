@@ -129,6 +129,7 @@ class CartLine(models.Model):
 
 
 class Order(models.Model):
+    unique_order_id = models.CharField(null=True,max_length=100)
     buyer = models.ForeignKey(BuyerUser, on_delete=models.CASCADE, related_name='orders_of', null=True)
     # products = models.ManyToManyField(Product, blank=True)
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
@@ -137,6 +138,7 @@ class Order(models.Model):
     billing_lastname = models.CharField(max_length=100, null=True)
     billing_email = models.CharField(max_length=100, null=True)
     billing_contact_number = models.CharField(max_length=100, null=True)
+    delivered = models.BooleanField(default=False)
 
     def __str__(self):
         data = "Order of buyer "+ self.buyer.full_name
