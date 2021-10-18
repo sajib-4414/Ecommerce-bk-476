@@ -1,6 +1,4 @@
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
-
-from ecommerce_project import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -211,8 +209,9 @@ class User(AbstractBaseUser):
     staff = models.BooleanField(default=False)  # a admin user; non super-user
     admin = models.BooleanField(default=False)  # a superuser
 
-    # first_name = models.CharField(max_length=100, null=True)
-    # last_name = models.CharField(max_length=100, null=True)
+    first_name = models.CharField(max_length=100, null=True)
+    last_name = models.CharField(max_length=100, null=True)
+    photoIdNum = models.CharField(max_length=50,null=True,blank=True)
     # email = models.CharField(max_length=50)
     # username = models.CharField(max_length=30)
     # password = models.CharField(max_length=30)
@@ -220,7 +219,8 @@ class User(AbstractBaseUser):
         Address,
         on_delete=models.DO_NOTHING,
         related_name='address_user_of',
-        null=True
+        null=True,
+        blank=True
     )
 
     # notice the absence of a "Password field", that is built in.
@@ -230,14 +230,14 @@ class User(AbstractBaseUser):
 
     def get_full_name(self):
         # The user is identified by their email address
-        return self.email
+        return self.first_name + " "+ self.last_name
 
     def get_short_name(self):
         # The user is identified by their email address
-        return self.email
+        return self.first_name
 
     def __str__(self):
-        return self.email
+        return self.get_full_name()
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
