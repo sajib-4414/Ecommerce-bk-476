@@ -1,6 +1,6 @@
 from django.contrib import admin
 from ecommerce_project.myapp.models import BuyerUser, Address, Company, Category, Product, Cart, Review, Order, \
-    CartLine, OrderLine, SellerUser
+    CartLine, OrderLine, SellerUser, User
 
 admin.site.register(BuyerUser)
 admin.site.register(Company)
@@ -13,3 +13,4 @@ admin.site.register(Order)
 admin.site.register(CartLine)
 admin.site.register(OrderLine)
 admin.site.register(SellerUser)
+admin.site.register(User)
