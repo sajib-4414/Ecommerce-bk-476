@@ -3,6 +3,8 @@ from ecommerce_project.myapp.models import Review, BuyerUser, Product
 from ecommerce_project.myapp.serializers import ProductOutputSerializer
 from ecommerce_project.myapp.serializers.buyer_serializers import BuyerOutputSerializer
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class ReviewUpdateSerializer(serializers.Serializer):
     description = serializers.CharField(required=False,max_length=200)
@@ -26,8 +28,8 @@ class ReviewUpdateSerializer(serializers.Serializer):
             #wants to update user, have to check if the user is a valid one
             user_id = validated_data.pop('user_id')
             try:
-                buyer_user = BuyerUser.objects.get(pk=user_id)
-            except BuyerUser.DoesNotExist:
+                buyer_user = User.objects.get(pk=user_id)
+            except User.DoesNotExist:
                 raise serializers.ValidationError("userError: problem with the user for this review.")
             instance.user = buyer_user
 
@@ -83,8 +85,8 @@ class ReviewInputSerializer(serializers.ModelSerializer):
         review = Review.objects.create(**validated_data)
 
         try:
-            buyer_user = BuyerUser.objects.get(pk=buyer_user_id)
-        except BuyerUser.DoesNotExist:
+            buyer_user = User.objects.get(pk=buyer_user_id)
+        except User.DoesNotExist:
             raise serializers.ValidationError("userError: problem with the user for this review.")
         review.user = buyer_user
 

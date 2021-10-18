@@ -1,17 +1,24 @@
 from rest_framework import serializers
 from ecommerce_project.myapp.models import SellerUser
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 
 class SellerOutputSerializer(serializers.ModelSerializer):
     pk = serializers.SerializerMethodField()
     photo_id_num = serializers.CharField(source='photoIdNum')  # Changing the model's name
+    name = serializers.SerializerMethodField()
 
     class Meta:
-        model = SellerUser
+        model = User
         fields = ('name', 'email','photo_id_num', 'pk')
 
     def get_pk(self,obj):
         return obj.id
+
+    def get_name(self,obj):
+        return obj.first_name+" "+obj.last_name
 
 
 class SellerInputSerializer(serializers.ModelSerializer):
@@ -19,11 +26,13 @@ class SellerInputSerializer(serializers.ModelSerializer):
     photo_id_num = serializers.CharField(source='photoIdNum') #Changing the model's name in API input field
 
     class Meta:
-        model = SellerUser
-        fields = ('name', 'email', 'password','photo_id_num')
+        model = User
+        fields = ('first_name','last_name', 'email', 'password','photo_id_num')
 
     def create(self, validated_data):
-        user = SellerUser.objects.create(**validated_data)
+        user = User.objects.create(**validated_data)
+        user.staff=False
+        user.admin=True
         return user
 
 class AddressUpdateSerializer(serializers.Serializer):
@@ -69,7 +78,8 @@ class AddressUpdateSerializer(serializers.Serializer):
 
 
 class SellerUpdateSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=200, required=False)
+    first_name = serializers.CharField(max_length=200, required=False)
+    last_name = serializers.CharField(max_length=200, required=False)
     email = serializers.CharField(max_length=30, required=False)
     password = serializers.CharField(max_length=50, required=False)
     photo_id_num = serializers.CharField(max_length=50, required=False)
@@ -79,8 +89,10 @@ class SellerUpdateSerializer(serializers.Serializer):
     """
 
     def update(self, instance, validated_data):
-        if 'name' in validated_data:
-            instance.name = validated_data.get('name', instance.name)
+        if 'first_name' in validated_data:
+            instance.first_name = validated_data.get('first_name', instance.first_name)
+        if 'last_name' in validated_data:
+            instance.last_name = validated_data.get('last_name', instance.last_name)
         if 'email' in validated_data:
             instance.email = validated_data.get('email', instance.email)
         if 'password' in validated_data:

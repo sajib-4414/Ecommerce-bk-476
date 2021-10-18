@@ -6,6 +6,8 @@ from ecommerce_project.myapp.models import SellerUser
 from ecommerce_project.myapp.serializers import SellerOutputSerializer
 from ecommerce_project.myapp.serializers.seller_serializers import SellerInputSerializer, SellerUpdateSerializer
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class SellersUserAPIView(APIView):
     # permission_classes = [IsAuthenticated]
@@ -13,7 +15,7 @@ class SellersUserAPIView(APIView):
     only for list and creation
     '''
     def get(self, request, format=None):
-        sellers = SellerUser.objects.all()
+        sellers = User.objects.all()
         serializer = SellerOutputSerializer(sellers, many=True)
         return Response(serializer.data)
 
@@ -33,12 +35,12 @@ class SellerDetailUpdateDeleteAPIView(APIView):
     # permission_classes = [IsAuthenticated]
 
     def get(self, request, pk, format=None):
-        seller = get_object_or_404(SellerUser, pk=pk)
+        seller = get_object_or_404(User, pk=pk)
         serializer = SellerOutputSerializer(seller)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
-        seller = get_object_or_404(SellerUser, pk=pk)
+        seller = get_object_or_404(User, pk=pk)
         # validate_if_post_or_comment_owner_logged_in(request, post)
         serializer = SellerUpdateSerializer(seller, data=request.data)
         if serializer.is_valid():
@@ -48,7 +50,7 @@ class SellerDetailUpdateDeleteAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
-        seller = get_object_or_404(SellerUser, pk=pk)
+        seller = get_object_or_404(User, pk=pk)
         # validate_if_post_or_comment_owner_logged_in(request, post)
         seller.delete()
         return Response({"delete": "delete success"},status=status.HTTP_204_NO_CONTENT)

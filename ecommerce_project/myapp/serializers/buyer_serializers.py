@@ -34,6 +34,8 @@ class BuyerInputSerializer(serializers.ModelSerializer):
         user = User.objects.create(**validated_data)
         address = Address.objects.create(**address_data)
         user.address = address
+        user.staff=True
+        user.admin=False
         user.save()
         return user
 

@@ -4,6 +4,9 @@ from ecommerce_project.myapp.serializers.seller_serializers import SellerOutputS
 from ecommerce_project.myapp.serializers.other_serializers import CategorySerializer
 from ecommerce_project.myapp.serializers.company_serializers import CompanyOutputSerializer
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 
 class ProductUpdateSerializer(serializers.Serializer):
     name = serializers.CharField(required=False,max_length=100)
@@ -40,8 +43,8 @@ class ProductUpdateSerializer(serializers.Serializer):
             # wants to update seller, have to check if the seller is a valid one
             seller_id = validated_data.pop('seller_id')
             try:
-                seller = SellerUser.objects.get(pk=seller_id)
-            except SellerUser.DoesNotExist:
+                seller = User.objects.get(pk=seller_id)
+            except User.DoesNotExist:
                 raise serializers.ValidationError("sellerError: problem with the seller for this product.")
             instance.seller = seller
 
@@ -118,8 +121,8 @@ class ProductInputSerializer(serializers.ModelSerializer):
         product.company = company
 
         try:
-            seller = SellerUser.objects.get(pk=seller_id)
-        except SellerUser.DoesNotExist:
+            seller = User.objects.get(pk=seller_id)
+        except User.DoesNotExist:
             raise serializers.ValidationError("sellerError: Invalid Seller chosen for the product")
         product.seller = seller
 
