@@ -1,7 +1,9 @@
-from django.http import Http404
 from rest_framework import serializers
 from ecommerce_project.myapp.models import Cart, BuyerUser, OrderLine, CartLine, Product
 from ecommerce_project.myapp.serializers import BuyerOutputSerializer, ProductOutputSerializer
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 class CartOutputSerializer(serializers.ModelSerializer):
@@ -41,8 +43,8 @@ class CartInputSerializer(serializers.ModelSerializer):
         user_id = validated_data.pop('user_id')
 
         try:
-            buyer_user = BuyerUser.objects.get(pk=user_id)
-        except BuyerUser.DoesNotExist:
+            buyer_user = User.objects.get(pk=user_id)
+        except User.DoesNotExist:
             raise serializers.ValidationError("userError: problem with the user for this cart.")
         if Cart.objects.filter(user=buyer_user).exists():
             raise serializers.ValidationError("userError: Cart already exists for the user")
@@ -116,8 +118,8 @@ class CartUpdateSerializer(serializers.Serializer):
             #wants to update user, have to check if the user is a valid one
             user_id = validated_data.pop('user_id')
             try:
-                buyer_user = BuyerUser.objects.get(pk=user_id)
-            except BuyerUser.DoesNotExist:
+                buyer_user = User.objects.get(pk=user_id)
+            except User.DoesNotExist:
                 raise serializers.ValidationError("userError: problem with the user for this cart.")
             #also check if that user has a cart already
             #this means, a cart can be only updated to include a user, if that user does not have a cart alraedy
