@@ -10,19 +10,21 @@ class BuyerOutputSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BuyerUser
-        fields = ['full_name', 'email','username','address','pk']
+        fields = ['first_name', 'last_name', 'email','username','address','pk']
 
     def get_pk(self,obj):
         return obj.id
 
 
 class BuyerInputSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(max_length=100, required=True)
+    last_name = serializers.CharField(max_length=100, required=True)
     password = serializers.CharField(write_only=True)
     address = AddressSerializer()
 
     class Meta:
         model = BuyerUser
-        fields = ('full_name', 'email', 'username', 'password','address')
+        fields = ('first_name','last_name', 'email', 'username', 'password','address')
 
     def create(self, validated_data):
         address_data = validated_data.pop('address')
@@ -34,7 +36,8 @@ class BuyerInputSerializer(serializers.ModelSerializer):
 
 
 class BuyerUpdateSerializer(serializers.Serializer):
-    full_name = serializers.CharField(required=False,max_length=300)
+    first_name = serializers.CharField(required=False,max_length=100)
+    last_name = serializers.CharField(required=False, max_length=100)
     email = serializers.CharField(max_length=50,required=False)
     username = serializers.CharField(max_length=30,required=False)
     password = serializers.CharField(max_length=30, write_only=True, required=False)
@@ -45,8 +48,10 @@ class BuyerUpdateSerializer(serializers.Serializer):
     """
     def update(self, instance, validated_data):
 
-        if 'full_name' in validated_data:
-            instance.full_name = validated_data.get('full_name', instance.full_name)
+        if 'first_name' in validated_data:
+            instance.first_name = validated_data.get('first_name', instance.first_name)
+        if 'last_name' in validated_data:
+            instance.last_name = validated_data.get('last_name', instance.last_name)
         if 'email' in validated_data:
             instance.email = validated_data.get('email', instance.email)
         if 'username' in validated_data:

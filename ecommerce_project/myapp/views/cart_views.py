@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from ecommerce_project.myapp.models import Cart, CartLine
 from ecommerce_project.myapp.serializers import CartOutputSerializer, \
     CartInputSerializer, CartLineOutputSerializer, CartLineInputSerializer, CartUpdateSerializer, \
-    CartLineUpdateSerializer
+    CartLineUpdateSerializer, CartWithLinesOutputSerializer
 
 
 def get_cart_object(pk):
@@ -57,6 +57,7 @@ class CartLineListNCreateAPIView(APIView):
             output_serializer = CartLineOutputSerializer(created_cartline)
             return Response(output_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class CartDetailUpdateDeleteAPIView(APIView):
     """
@@ -112,3 +113,62 @@ class CartLineDetailUpdateDeleteAPIView(APIView):
         # validate_if_post_or_comment_owner_logged_in(request, post)
         cartline.delete()
         return Response({"delete": "delete success"},status=status.HTTP_204_NO_CONTENT)
+
+
+class CartlWithCartLinesForUserAPIView(APIView):
+    """
+    Retrieve, update or delete a object instance.
+    """
+    # permission_classes = [IsAuthenticated]
+
+    def get(self, request, user_id, format=None):
+        try:
+            cart = Cart.objects.get(user_id=user_id)
+        except Cart.DoesNotExist:
+            raise Http404
+        serializer = CartWithLinesOutputSerializer(cart)
+        return Response(serializer.data)
+
+
+class AddToCartUserAPIView(APIView):
+    # permission_classes = [IsAuthenticated]
+    '''
+
+    '''
+    # def get(self, request, format=None):
+    #     cartline_list = CartLine.objects.all()
+    #     serializer = CartLineOutputSerializer(cartline_list, many=True)
+    #     return Response(serializer.data)
+
+    def post(self, request, format=None):
+        params = request.data
+        user_id = params['user_id']
+        product_id = params['product_id']
+        print(user_id)
+        #now find the cart of this user, if no cart, create a cart
+        try:
+            user_cart = Cart.objects.get(user_id=user_id)
+        except Cart.DoesNotExist:
+            #we will create a cart for him
+            user_cart = Cart.objects.create(user_id=user_id, unique_id="temp")
+            #now create a cartline for him
+            cart_line = CartLine.objects.create(product_id=product_id, cart_id=user_cart.id, quantity=1)
+
+
+        #coming here means cart exists, we will check if the cartline exists, if not create
+        #one, if yes , just raise the quantity
+        #let's find if there is any cartline exists
+        try:
+            cartline = CartLine.objects.get(product_id=product_id)
+            #cartline exists, so increase the quantity
+            cartline.quantity = (cartline.quantity+1)
+            cartline.save()
+
+        except CartLine.DoesNotExist:
+            #coming here means the cartline does not exist
+            cart_line = CartLine.objects.create(product_id=product_id, cart_id=user_cart.id, quantity=1)
+
+        # get the cart with cartlines object from the serializer
+        serializer = CartWithLinesOutputSerializer(user_cart)
+        # return the cart with carlines response
+        return Response(serializer.data)

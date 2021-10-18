@@ -25,7 +25,8 @@ class BuyerUser(models.Model):
     delete dependencies upon object deletion
     pending
     """
-    full_name = models.CharField(max_length=300)
+    first_name = models.CharField(max_length=100, null=True)
+    last_name = models.CharField(max_length=100, null=True)
     email = models.CharField(max_length=50)
     username = models.CharField(max_length=30)
     password = models.CharField(max_length=30)
@@ -37,7 +38,7 @@ class BuyerUser(models.Model):
     )
 
     def __str__(self):
-        data = self.full_name
+        data = self.first_name + ' '+ self.last_name
         return data
 
 
@@ -120,27 +121,33 @@ class Cart(models.Model):
 
 class CartLine(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True, blank=True)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name= 'cartlines', null=True, blank=True)
     quantity = models.IntegerField(default=1)
 
-    def __str__(self):
-        return "Cart item of " + self.product.name
+    # def __str__(self):
+    #     return "Cart item of " + self.cart.unique_id
 
 
 class Order(models.Model):
+    unique_order_id = models.CharField(null=True,max_length=100)
     buyer = models.ForeignKey(BuyerUser, on_delete=models.CASCADE, related_name='orders_of', null=True)
     # products = models.ManyToManyField(Product, blank=True)
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     value = models.FloatField()
+    billing_firstname = models.CharField(max_length=100, null=True)
+    billing_lastname = models.CharField(max_length=100, null=True)
+    billing_email = models.CharField(max_length=100, null=True)
+    billing_contact_number = models.CharField(max_length=100, null=True)
+    delivered = models.BooleanField(default=False)
 
     def __str__(self):
-        data = "Order of buyer "+ self.buyer.full_name
+        data = "Order of buyer "+ self.buyer.first_name+" "+self.buyer.last_name
         return data
 
 
 class OrderLine(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='orderlines', null=True, blank=True)
     quantity = models.IntegerField(default=1)
 
     def __str__(self):
