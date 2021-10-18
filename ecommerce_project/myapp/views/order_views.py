@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from ecommerce_project.myapp.models import Order, OrderLine
 from ecommerce_project.myapp.serializers.order_serializers import OrderOutputSerializer, OrderInputSerializer, \
     OrderLineOutputSerializer, OrderLineInputSerializer, OrderUpdateSerializer, OrderLineUpdateSerializer, \
-    OrderWithLinesOutputSerializer
+    OrderWithLinesForUserOutputSerializer
 
 
 class OrderListNCreateAPIView(APIView):
@@ -115,5 +115,5 @@ class OrderWithOrderLinesByUserAPIView(APIView):
         except Order.DoesNotExist:
             #means the order does not exist
             raise Http404
-        serializer = OrderOutputSerializer(order_list,many=True)
+        serializer = OrderWithLinesForUserOutputSerializer(order_list, many=True)
         return Response(serializer.data)

@@ -202,16 +202,28 @@ class OrderLineUpdateSerializer(serializers.Serializer):
         return obj.id
 
 
-class OrderWithLinesOutputSerializer(serializers.ModelSerializer):
+class OrderWithLinesForUserOutputSerializer(serializers.ModelSerializer):
     #just adding cartlines won't work, if you do not specify related name
     # as cartlines in the cartline model
     orderlines = OrderLineOutputSerializer(many=True, read_only=True)
     buyer = BuyerOutputSerializer()
     pk = serializers.SerializerMethodField()
+    quantity = serializers.SerializerMethodField()
 
     class Meta:
+        order_outputs_extended = order_output_fields.copy()
+        order_outputs_extended.extend(['orderlines','quantity'])
+        # print(order_outputs_extended)
         model = Order
-        fields = order_output_fields
+        fields = order_outputs_extended
+        # fields = ['unique_order_id','buyer', 'date','value', 'billing_firstname', 'billing_lastname', 'billing_email', 'billing_contact_number','delivered','orderlines','quantity','pk']
 
     def get_pk(self,obj):
         return obj.id
+    def get_quantity(self,obj):
+        order_object = obj
+        orderlines = OrderLine.objects.filter(order_id=order_object.id)
+        total_quantity = 0
+        for orderline in orderlines:
+            total_quantity = total_quantity + orderline.quantity
+        return total_quantity
