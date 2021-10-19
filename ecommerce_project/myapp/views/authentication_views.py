@@ -1,3 +1,6 @@
+import json
+
+from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -12,6 +15,13 @@ class GetAuthToken(APIView):
         serializer = LoginSerializer(data=request.data.copy())
         if serializer.is_valid():
             created_buyer = serializer.save()
-            token = created_buyer['token']
-            return Response({'token':token.key})
+            # newdict = {'token': "test"}
+            # newdict.update(created_buyer)
+            # token = created_buyer['token']
+            # user = created_buyer['buyer']
+            # user['token'] = token.key
+            # print(type(created_buyer))
+            # print(created_buyer)
+            # json_string = json.dumps(created_buyer)
+            return JsonResponse(created_buyer)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
