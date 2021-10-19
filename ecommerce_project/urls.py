@@ -49,4 +49,5 @@ urlpatterns = [
     path('cart-carlines-by-user/<int:user_id>/', views.CartlWithCartLinesForUserAPIView.as_view()),
     path('cartlines/', views.CartLineListNCreateAPIView.as_view()),
     path('cartlines/<int:pk>/', views.CartLineDetailUpdateDeleteAPIView.as_view()),
+    path('get-auth-token/', views.GetAuthToken.as_view()),
 ]

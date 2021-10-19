@@ -52,6 +52,7 @@ class BuyerUpdateSerializer(serializers.Serializer):
     """
     A serializer can either implement create or update methods or both, as per django rest docs. 
     """
+
     def update(self, instance, validated_data):
 
         if 'first_name' in validated_data:
@@ -68,7 +69,7 @@ class BuyerUpdateSerializer(serializers.Serializer):
             address_data = validated_data.pop('address')
             #check if the user already have an address
             try:
-                existing_address = BuyerUser.objects.get(pk=instance.id).address
+                existing_address = User.objects.get(pk=instance.id).address
                 existing_address.street_address = address_data.get('street_address')
                 existing_address.city = address_data.get('city')
                 existing_address.province = address_data.get('province')
