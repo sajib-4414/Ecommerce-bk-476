@@ -58,3 +58,14 @@ class ProductDetailUpdateDeleteAPIView(APIView):
         # validate_if_post_or_comment_owner_logged_in(request, post)
         product.delete()
         return Response({"delete": "delete success"},status=status.HTTP_204_NO_CONTENT)
+
+
+class ProductListByCategoryAPIView(APIView):
+    # permission_classes = [IsAuthenticated]
+    '''
+    only for list and creation
+    '''
+    def get(self, request, category_name, format=None):
+        product_list = Product.objects.filter(category__name__contains=category_name)
+        serializer = ProductOutputSerializer(product_list, many=True)
+        return Response(serializer.data)
