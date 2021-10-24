@@ -35,6 +35,7 @@ urlpatterns = [
     path('categories/<int:pk>/', views.CategoryDetailUpdateDeleteAPIView.as_view()),
     path('products/', views.ProductListNCreateAPIView.as_view()),
     path('products-by-category/<str:category_name>/', views.ProductListByCategoryAPIView.as_view()),
+    path('products-by-company/<int:company_id>/', views.ProductListByCompanyAPIView.as_view()),
     path('products/<int:pk>/', views.ProductDetailUpdateDeleteAPIView.as_view()),
     path('reviews/', views.ReviewListNCreateAPIView.as_view()),
     path('reviews/<int:pk>/', views.ReviewDetailUpdateDeleteAPIView.as_view()),
