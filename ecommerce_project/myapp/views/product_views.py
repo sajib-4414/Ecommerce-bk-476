@@ -63,7 +63,6 @@ class ProductDetailUpdateDeleteAPIView(APIView):
 class ProductListByCategoryAPIView(APIView):
     # permission_classes = [IsAuthenticated]
     '''
-    only for list and creation
     '''
     def get(self, request, category_name, format=None):
         product_list = Product.objects.filter(category__name__contains=category_name)
