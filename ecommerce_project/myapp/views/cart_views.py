@@ -159,7 +159,7 @@ class AddToCartUserAPIView(APIView):
         #one, if yes , just raise the quantity
         #let's find if there is any cartline exists
         try:
-            cartline = CartLine.objects.get(product_id=product_id)
+            cartline = CartLine.objects.get(cart_id=user_cart.id, product_id=product_id)
             #cartline exists, so increase the quantity
             cartline.quantity = (cartline.quantity+1)
             cartline.save()
