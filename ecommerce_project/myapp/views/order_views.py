@@ -8,6 +8,8 @@ from ecommerce_project.myapp.serializers.order_serializers import OrderOutputSer
     OrderLineOutputSerializer, OrderLineInputSerializer, OrderUpdateSerializer, OrderLineUpdateSerializer, \
     OrderWithLinesForUserOutputSerializer
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class OrderListNCreateAPIView(APIView):
     # permission_classes = [IsAuthenticated]
@@ -97,9 +99,9 @@ class OrderLineDetailUpdateDeleteAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
-        cartline = get_object_or_404(OrderLine, pk=pk)
+        orderline = get_object_or_404(OrderLine, pk=pk)
         # validate_if_post_or_comment_owner_logged_in(request, post)
-        cartline.delete()
+        orderline.delete()
         return Response({"delete": "delete success"},status=status.HTTP_204_NO_CONTENT)
 
 

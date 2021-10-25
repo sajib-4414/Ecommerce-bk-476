@@ -6,3 +6,4 @@ from .review_views import *
 from .order_views import *
 from .buyer_views import *
 from .seller_views import *
+from .authentication_views import *

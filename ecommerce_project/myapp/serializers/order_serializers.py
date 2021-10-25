@@ -1,12 +1,15 @@
 import uuid
 
 from rest_framework import serializers
-from ecommerce_project.myapp.models import Product, BuyerUser, Order, OrderLine, Cart, CartLine
+from rest_framework.exceptions import ValidationError
+
+from ecommerce_project.myapp.models import Product, Order, OrderLine, Cart, CartLine
 from ecommerce_project.myapp.serializers import BuyerOutputSerializer
 from ecommerce_project.myapp.serializers.product_serializers import ProductOutputSerializer
 
 order_output_fields = ['unique_order_id','buyer', 'date','value', 'billing_firstname', 'billing_lastname', 'billing_email', 'billing_contact_number','delivered','pk']
-
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class OrderOutputSerializer(serializers.ModelSerializer):
     pk = serializers.SerializerMethodField()
@@ -38,14 +41,17 @@ class OrderInputSerializer(serializers.ModelSerializer):
         order.save()
 
         try:
-            buyer_user = BuyerUser.objects.get(pk=buyer_user_id)
-        except BuyerUser.DoesNotExist:
+            buyer_user = User.objects.get(pk=buyer_user_id)
+        except User.DoesNotExist:
             raise serializers.ValidationError("userError: problem with the user for this order.")
         order.buyer = buyer_user
 
         order.save()
         #now move the cartlines to orderlines ,associate with this order and remove cartlines
-        user_cart = Cart.objects.get(user_id=buyer_user_id)
+        try:
+            user_cart = Cart.objects.get(user_id=buyer_user_id)
+        except Cart.DoesNotExist:
+            raise ValidationError("error: This user does not have any cart yet, please try after adding a cart")
         cartlines = CartLine.objects.filter(cart_id=user_cart.id)
         if cartlines:
             #means not empty, means there are cartlines
@@ -128,8 +134,8 @@ class OrderUpdateSerializer(serializers.Serializer):
             #wants to update user, have to check if the user is a valid one
             buyer_id = validated_data.pop('buyer_id')
             try:
-                buyer_user = BuyerUser.objects.get(pk=buyer_id)
-            except BuyerUser.DoesNotExist:
+                buyer_user = User.objects.get(pk=buyer_id)
+            except User.DoesNotExist:
                 raise serializers.ValidationError("userError: problem with the user for this order.")
             instance.user = buyer_user
 

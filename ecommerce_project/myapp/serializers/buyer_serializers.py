@@ -1,7 +1,10 @@
 from rest_framework import serializers
 
-from ecommerce_project.myapp.models import BuyerUser, Address
+from ecommerce_project.myapp.models import Address
 from ecommerce_project.myapp.serializers.other_serializers import AddressSerializer
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 class BuyerOutputSerializer(serializers.ModelSerializer):
@@ -9,7 +12,7 @@ class BuyerOutputSerializer(serializers.ModelSerializer):
     address = AddressSerializer()
 
     class Meta:
-        model = BuyerUser
+        model = User
         fields = ['first_name', 'last_name', 'email','username','address','pk']
 
     def get_pk(self,obj):
@@ -20,17 +23,20 @@ class BuyerInputSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(max_length=100, required=True)
     last_name = serializers.CharField(max_length=100, required=True)
     password = serializers.CharField(write_only=True)
-    address = AddressSerializer()
+    username = serializers.CharField(max_length=100,required=True)
+    address = AddressSerializer(required=True)
 
     class Meta:
-        model = BuyerUser
+        model = User
         fields = ('first_name','last_name', 'email', 'username', 'password','address')
 
     def create(self, validated_data):
         address_data = validated_data.pop('address')
-        user = BuyerUser.objects.create(**validated_data)
+        user = User.objects.create(**validated_data)
         address = Address.objects.create(**address_data)
         user.address = address
+        user.staff=True
+        user.admin=False
         user.save()
         return user
 
@@ -46,6 +52,7 @@ class BuyerUpdateSerializer(serializers.Serializer):
     """
     A serializer can either implement create or update methods or both, as per django rest docs. 
     """
+
     def update(self, instance, validated_data):
 
         if 'first_name' in validated_data:
@@ -57,12 +64,12 @@ class BuyerUpdateSerializer(serializers.Serializer):
         if 'username' in validated_data:
             instance.username = validated_data.get('username', instance.username)
         if 'password' in validated_data:
-            instance.password = validated_data.get('password', instance.password)
+            instance.set_password(validated_data.get('password'))
         if 'address' in validated_data:
             address_data = validated_data.pop('address')
             #check if the user already have an address
             try:
-                existing_address = BuyerUser.objects.get(pk=instance.id).address
+                existing_address = User.objects.get(pk=instance.id).address
                 existing_address.street_address = address_data.get('street_address')
                 existing_address.city = address_data.get('city')
                 existing_address.province = address_data.get('province')

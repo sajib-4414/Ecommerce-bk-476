@@ -34,6 +34,8 @@ urlpatterns = [
     path('categories/', views.CategoryListNCreateAPIView.as_view()),
     path('categories/<int:pk>/', views.CategoryDetailUpdateDeleteAPIView.as_view()),
     path('products/', views.ProductListNCreateAPIView.as_view()),
+    path('products-by-category/<str:category_name>/', views.ProductListByCategoryAPIView.as_view()),
+    path('products-by-company/<int:company_id>/', views.ProductListByCompanyAPIView.as_view()),
     path('products/<int:pk>/', views.ProductDetailUpdateDeleteAPIView.as_view()),
     path('reviews/', views.ReviewListNCreateAPIView.as_view()),
     path('reviews/<int:pk>/', views.ReviewDetailUpdateDeleteAPIView.as_view()),
@@ -49,4 +51,5 @@ urlpatterns = [
     path('cart-carlines-by-user/<int:user_id>/', views.CartlWithCartLinesForUserAPIView.as_view()),
     path('cartlines/', views.CartLineListNCreateAPIView.as_view()),
     path('cartlines/<int:pk>/', views.CartLineDetailUpdateDeleteAPIView.as_view()),
+    path('get-auth-token/', views.GetAuthToken.as_view()),
 ]
