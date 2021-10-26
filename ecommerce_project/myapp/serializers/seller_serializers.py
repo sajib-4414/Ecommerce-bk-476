@@ -34,6 +34,7 @@ class SellerInputSerializer(serializers.ModelSerializer):
         user = User.objects.create(**validated_data)
         user.staff=False
         user.admin=True
+        user.save()
         return user
 
 class AddressUpdateSerializer(serializers.Serializer):
