@@ -78,3 +78,12 @@ class ProductListByCompanyAPIView(APIView):
         product_list = Product.objects.filter(company_id=company_id)
         serializer = ProductOutputSerializer(product_list, many=True)
         return Response(serializer.data)
+
+class ProductListBySellerAPIView(APIView):
+    # permission_classes = [IsAuthenticated]
+    '''
+    '''
+    def get(self, request, seller_id, format=None):
+        product_list = Product.objects.filter(seller_id=seller_id)
+        serializer = ProductOutputSerializer(product_list, many=True)
+        return Response(serializer.data)

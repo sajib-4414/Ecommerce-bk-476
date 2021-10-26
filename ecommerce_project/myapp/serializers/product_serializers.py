@@ -87,7 +87,7 @@ class ProductOutputSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['name', 'price','quantity','delivery_cost','category', 'company','seller', 'pk']
+        fields = ['name', 'price','quantity','delivery_cost','category', 'company','seller', 'date','pk']
 
     def get_pk(self,obj):
         return obj.id

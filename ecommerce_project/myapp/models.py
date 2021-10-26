@@ -92,7 +92,7 @@ class User(AbstractBaseUser):
         return self.first_name
 
     def __str__(self):
-        return self.get_full_name()
+        return self.email
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
@@ -201,6 +201,7 @@ class Product(models.Model):
         null=True
     )
     delivery_cost = models.FloatField()
+    date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     # cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='products')
 
     def __str__(self):
