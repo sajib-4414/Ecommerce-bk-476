@@ -9,9 +9,13 @@ class AddressSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    pk = serializers.SerializerMethodField()
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ('name','pk')
+
+    def get_pk(self, obj):
+        return obj.id
 
 
 class AddressUpdateSerializer(serializers.Serializer):
