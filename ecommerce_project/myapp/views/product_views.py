@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import Http404
 from rest_framework import status
 from rest_framework.response import Response
@@ -66,6 +67,15 @@ class ProductListByCategoryAPIView(APIView):
     '''
     def get(self, request, category_name, format=None):
         product_list = Product.objects.filter(category__name__contains=category_name)
+        serializer = ProductOutputSerializer(product_list, many=True)
+        return Response(serializer.data)
+
+class ProductListBySearchKeywordsAPIView(APIView):
+    # permission_classes = [IsAuthenticated]
+    '''
+    '''
+    def get(self, request, keywords, format=None):
+        product_list = Product.objects.filter(Q(name__contains=keywords)|Q(category__name__contains=keywords)|Q(company__CompanyName__contains=keywords))
         serializer = ProductOutputSerializer(product_list, many=True)
         return Response(serializer.data)
 
