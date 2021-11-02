@@ -14,7 +14,7 @@ class GetAuthToken(APIView):
     def post(self, request, format=None):
         serializer = LoginSerializer(data=request.data.copy())
         if serializer.is_valid():
-            created_buyer = serializer.save()
+            output = serializer.save()
             # newdict = {'token': "test"}
             # newdict.update(created_buyer)
             # token = created_buyer['token']
@@ -23,5 +23,5 @@ class GetAuthToken(APIView):
             # print(type(created_buyer))
             # print(created_buyer)
             # json_string = json.dumps(created_buyer)
-            return JsonResponse(created_buyer)
+            return JsonResponse(output)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

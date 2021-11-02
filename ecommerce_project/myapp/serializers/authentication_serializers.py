@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 
-from ecommerce_project.myapp.serializers import BuyerOutputSerializer
+from ecommerce_project.myapp.serializers import BuyerOutputSerializer, SellerOutputSerializer
 
 User = get_user_model()
 
@@ -15,7 +15,7 @@ class RequirableBooleanField(serializers.BooleanField):
 class LoginSerializer(serializers.Serializer):
     email = serializers.CharField(required=True,max_length=50)
     password = serializers.CharField(required=True,max_length=20)
-    user = BuyerOutputSerializer(read_only=True)
+    # user = BuyerOutputSerializer(read_only=True)
     is_buyer = RequirableBooleanField(required=True)
 
     def create(self, validated_data):
@@ -35,12 +35,14 @@ class LoginSerializer(serializers.Serializer):
         except User.DoesNotExist:
             raise Http404
         token, created = Token.objects.get_or_create(user=user)
-        buyer = BuyerOutputSerializer(user)
+
         newdict = {'token': token.key}
         if user.staff and not user.admin:
+            buyer = BuyerOutputSerializer(user)
             newdict.update({"buyer":buyer.data})
         else:
-            newdict.update({"seller": buyer.data})
+            seller = SellerOutputSerializer(user)
+            newdict.update({"seller": seller.data})
         return newdict
 
 
