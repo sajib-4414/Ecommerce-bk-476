@@ -2077,3 +2077,9 @@ for the seller user the seller details will be returned with the key seller
 
 ### How to get all the cart items of a user
 - Call the cart with cartlines by user API
+
+## Test cases
+To run the test cases, run this command
+```
+python manage.py test
+```
