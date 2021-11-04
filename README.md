@@ -2055,25 +2055,25 @@ for the seller user the seller details will be returned with the key seller
 ```
 
 ## Tutorial to use the APIs
-# How to add a product (as a seller)
+### How to add a product (as a seller)
 - First register as a seller user
 - Then login as a seller
 - Then add a category (if not existed)
 - Then add a company (if not existed)
 - Add a product specifying product details, category_id,seller_id,company_id
 
-# How to add product to cart
+### How to add product to cart
 - First register as a buyer and login
 - create a cart with the buyer (a buyer can have only one cart)
 - call add product to cart API specifying cart_id, product_id
 
-# How to order
+### How to order
 - Register as a buyer and login
 - add product(s) to the cart
 - call order create api, it will automatically move the cart items to a new order, create orderlines under the order
 
-# How to get the all the orders of someone
+### How to get the all the orders of someone
 - Call the orderlist with orderlines of a user api
 
-# How to get all the cart items of a user
+### How to get all the cart items of a user
 - Call the cart with cartlines by user API
