@@ -6,6 +6,52 @@ from ecommerce_project.myapp.serializers.company_serializers import CompanyOutpu
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
+"""
+The purpose of the serializers are to create, update, read Product Objects on/from the database
+and return them to the views for the REST API response.
+We use three dedicated serializers for the create, read, update operations. The reason is,
+we can employ specific business logic, input pattern, and validation on the APIs.
+We use the inputserializer to create a product, outputserializer to output 
+the product properties in the designated format, and use the updateserializer 
+to update the product properties.
+"""
+
+
+class ProductInputSerializer(serializers.ModelSerializer):
+    """
+    These id fields are declared as an extra on the serializer.Although they output
+    as respective objects, they input as id
+    For example, we want to input the category as a category_id, so we can pick the right
+    preexisting category
+    """
+    category_id = serializers.IntegerField(required=True)
+    company_id = serializers.IntegerField(required=True)
+    seller_id = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = Product
+        fields = ['name', 'price', 'quantity', 'delivery_cost', 'category_id', 'company_id', 'seller_id']
+
+    def create(self, validated_data):
+        category_id = validated_data.get('category_id')
+        company_id = validated_data.get('company_id')
+        seller_id = validated_data.get('seller_id')
+
+        # validating the foreign keys
+        if not Category.objects.filter(pk=category_id).exists():
+            raise serializers.ValidationError("Error: Category does not exist")
+        if not Company.objects.filter(pk=company_id).exists():
+            raise serializers.ValidationError("Error: Company does not exist")
+        if not User.objects.filter(pk=seller_id).exists():
+            raise serializers.ValidationError("Error: Seller does not exist")
+
+        '''
+        At this point, it means, all the provided foreign keys are valid, so we can
+        safely create product object
+        '''
+        product = Product.objects.create(**validated_data)
+        return product
+
 
 class ProductUpdateSerializer(serializers.Serializer):
     """
@@ -74,12 +120,13 @@ class ProductUpdateSerializer(serializers.Serializer):
 
 class ProductOutputSerializer(serializers.ModelSerializer):
     """
-    pk is the generated field in serializer,
+    pk is a generated field in serializer through SerializerMethodField,
     which is essentially the database primary key
     """
     pk = serializers.SerializerMethodField()
 
-    ''' Following fields are readyonly because we want them to output only, each of
+    ''' 
+    Following fields are readyonly because we want them to output only, each of
     them causes corresponding foreign keys to output full object
     '''
     category = CategorySerializer(read_only=True)
@@ -92,35 +139,3 @@ class ProductOutputSerializer(serializers.ModelSerializer):
 
     def get_pk(self,obj):
         return obj.id
-
-
-class ProductInputSerializer(serializers.ModelSerializer):
-    """
-    These id fields are declared as an extra on the serializer.Although they output
-    as respective objects, they input as id
-    For example, we want to input the category as a category_id, so we can pick the right
-    preexisting category
-    """
-    category_id = serializers.IntegerField(required=True)
-    company_id = serializers.IntegerField(required=True)
-    seller_id = serializers.IntegerField(required=True)
-
-    class Meta:
-        model = Product
-        fields = ['name', 'price', 'quantity', 'delivery_cost', 'category_id', 'company_id', 'seller_id']
-
-    def create(self, validated_data):
-        category_id = validated_data.get('category_id')
-        company_id = validated_data.get('company_id')
-        seller_id = validated_data.get('seller_id')
-
-        # validating the foreign keys
-        if not Category.objects.filter(pk=category_id).exists():
-            raise serializers.ValidationError("Error: Category does not exist")
-        if not Company.objects.filter(pk=company_id).exists():
-            raise serializers.ValidationError("Error: Company does not exist")
-        if not User.objects.filter(pk=seller_id).exists():
-            raise serializers.ValidationError("Error: Seller does not exist")
-
-        product = Product.objects.create(**validated_data)
-        return product
