@@ -238,6 +238,7 @@ class CartLine(models.Model):
     # def __str__(self):
     #     return "Cart item of " + self.cart.unique_id
 
+
 class Order(models.Model):
     unique_order_id = models.CharField(null=True,max_length=100)
     buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders_of', null=True)
@@ -262,5 +263,9 @@ class OrderLine(models.Model):
 
     def __str__(self):
         return "Order item of the product" + self.product.name
+
+    @property
+    def total(self):
+        return self.product.price*self.quantity
 
 
