@@ -32,7 +32,7 @@ class BuyerInputSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         is_address_found = False
-        if('address' in validated_data):
+        if 'address' in validated_data:
             is_address_found = True
             address_data = validated_data.pop('address')
             address = Address.objects.create(**address_data)
