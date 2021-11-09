@@ -37,8 +37,12 @@ def product_changed(sender, instance, **kwargs):
             order.value = total
             order.save()
 
+"""
+This is a custom observer method which observes when a signal named order_confirmed
+is manually fired. This is not a built in signal found in django.
+"""
+order_confirmed = dispatch.Signal(providing_args=["order_id","cart_id"])
+
 # @receiver(post_init, sender=User)
 # def post_init_called(sender, **kwargs):
 #     print("I am fired")
-
-order_confirmed = dispatch.Signal(providing_args=["order_id"])

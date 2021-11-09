@@ -1,21 +1,22 @@
 from django.dispatch import receiver
 from ecommerce_project.myapp import signals
-from ecommerce_project.myapp.models import Order, Product, OrderLine
+from ecommerce_project.myapp.models import Order, Product, OrderLine, CartLine, Cart
 
-
+"""
+This is the receiver of a manually defined Signal Observer.
+It is fired when this specific signal is fired by anywhere in the code
+It aims to remove same blocks of code from multiple places
+"""
 @receiver(signals.order_confirmed)
-def my_task_done(sender, order_id, **kwargs):
-    print("Observer Noted order finished, order ID is::"+str(order_id))
-    # now decrease the product quantity of the ordered products
-    # order_id = 18
+def my_task_done(sender, order_id, cart_id, **kwargs):
+    print("Observer Noted order finished, order ID is::"+str(order_id)+", cart ID is::"+str(cart_id))
+
+    '''
+    We got a signal order complete, so we will decrease the products quantity and delete the cart
+    items here
+    '''
     order = Order.objects.get(pk=order_id)
-    print("printing order object")
-    print(order)
     orderlines = OrderLine.objects.filter(order_id=order_id)
-    if orderlines:
-        print("queryset not empty")
-    else:
-        print("queryset empty!!!!!!!!!!!")
     for orderline in orderlines:
         product = Product.objects.get(pk=orderline.product.id)
         quantity = product.quantity - orderline.quantity
@@ -23,5 +24,7 @@ def my_task_done(sender, order_id, **kwargs):
             product.quantity = quantity
         else:
             product.quantity = 0
-        print("lastly updating the quanttity now")
         product.save()
+
+    # now removing the cart items
+    CartLine.objects.filter(cart_id=cart_id).delete()

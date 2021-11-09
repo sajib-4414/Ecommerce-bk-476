@@ -60,10 +60,9 @@ class OrderInputSerializer(serializers.ModelSerializer):
         if cartlines:
             #means not empty, means there are cartlines
             for cartline in cartlines:
-                orderline = OrderLine.objects.create(order_id=order.id, product_id=cartline.product.id,quantity=cartline.quantity)
+                orderline = OrderLine().create_orderline_from_cartline(cartline=cartline,order_id=order.id)
             #now delete the cartlines
-            CartLine.objects.filter(cart_id=user_cart.id).delete()
-        signals.order_confirmed.send(sender='order', order_id=order.id)
+        signals.order_confirmed.send(sender='order', order_id=order.id,cart_id=user_cart.id)
         return order
 
 

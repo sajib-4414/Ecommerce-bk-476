@@ -268,4 +268,12 @@ class OrderLine(models.Model):
     def total(self):
         return self.product.price*self.quantity
 
+    def create_orderline_from_cartline(self,cartline,order_id):
+        self.product_id = cartline.product_id
+        self.order_id = order_id
+        self.quantity = cartline.quantity
+        self.save()
+        return self
+
+
 
