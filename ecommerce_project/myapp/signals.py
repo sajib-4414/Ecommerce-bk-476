@@ -1,3 +1,4 @@
+from django import dispatch
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from ecommerce_project.myapp.models import Product, OrderLine, Cart
@@ -39,3 +40,5 @@ def product_changed(sender, instance, **kwargs):
 # @receiver(post_init, sender=User)
 # def post_init_called(sender, **kwargs):
 #     print("I am fired")
+
+order_confirmed = dispatch.Signal(providing_args=["order_id"])

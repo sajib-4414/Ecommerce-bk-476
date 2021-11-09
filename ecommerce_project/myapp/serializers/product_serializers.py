@@ -1,9 +1,14 @@
 from rest_framework import serializers
+
+from ecommerce_project.myapp import signals
 from ecommerce_project.myapp.models import Category, Company, Product
 from ecommerce_project.myapp.serializers.seller_serializers import SellerOutputSerializer
 from ecommerce_project.myapp.serializers.other_serializers import CategorySerializer
 from ecommerce_project.myapp.serializers.company_serializers import CompanyOutputSerializer
 from django.contrib.auth import get_user_model
+
+from ecommerce_project.myapp.signals import order_confirmed
+
 User = get_user_model()
 
 """

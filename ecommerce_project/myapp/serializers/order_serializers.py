@@ -3,9 +3,11 @@ import uuid
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from ecommerce_project.myapp import signals
 from ecommerce_project.myapp.models import Product, Order, OrderLine, Cart, CartLine
 from ecommerce_project.myapp.serializers import BuyerOutputSerializer
 from ecommerce_project.myapp.serializers.product_serializers import ProductOutputSerializer
+from ecommerce_project.myapp.signals import order_confirmed
 
 order_output_fields = ['unique_order_id','buyer', 'date','value', 'billing_firstname', 'billing_lastname', 'billing_email', 'billing_contact_number','delivered','pk']
 from django.contrib.auth import get_user_model
@@ -48,6 +50,7 @@ class OrderInputSerializer(serializers.ModelSerializer):
         order.buyer = buyer_user
 
         order.save()
+
         #now move the cartlines to orderlines ,associate with this order and remove cartlines
         try:
             user_cart = Cart.objects.get(user_id=buyer_user_id)
@@ -60,6 +63,7 @@ class OrderInputSerializer(serializers.ModelSerializer):
                 orderline = OrderLine.objects.create(order_id=order.id, product_id=cartline.product.id,quantity=cartline.quantity)
             #now delete the cartlines
             CartLine.objects.filter(cart_id=user_cart.id).delete()
+        signals.order_confirmed.send(sender='order', order_id=order.id)
         return order
 
 

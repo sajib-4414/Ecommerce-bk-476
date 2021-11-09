@@ -6,5 +6,6 @@ class MyappConfig(AppConfig):
 
     def ready(self):
         import ecommerce_project.myapp.signals
+        from ecommerce_project.myapp import receivers
 
 
