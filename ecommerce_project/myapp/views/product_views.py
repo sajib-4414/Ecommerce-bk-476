@@ -20,7 +20,15 @@ class ProductListNCreateAPIView(APIView):
     only for list and creation
     '''
     def get(self, request, format=None):
-        product_list = Product.objects.all()
+        # checking if there is any query params
+        product_list = None
+        if 'sort' in request.query_params:
+            sort_order = request.query_params['sort']
+            if sort_order == "date":
+                product_list = Product.objects.all().order_by('-date')
+
+        if not product_list:
+            product_list = Product.objects.all()
         serializer = ProductOutputSerializer(product_list, many=True)
         return Response(serializer.data)
 
