@@ -227,6 +227,8 @@ class Cart(models.Model):
 
     def __str__(self):
         data = self.unique_id
+        if not data:
+            return "null cart unique id product"
         return data
 
 
@@ -235,8 +237,8 @@ class CartLine(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name= 'cartlines', null=True, blank=True)
     quantity = models.IntegerField(default=1)
 
-    # def __str__(self):
-    #     return "Cart item of " + self.cart.unique_id
+    def __str__(self):
+        return "Cart item of product:" + str(self.product_id)
 
 
 class Order(models.Model):

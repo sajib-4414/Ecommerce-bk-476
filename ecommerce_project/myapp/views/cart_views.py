@@ -2,10 +2,10 @@ from django.http import Http404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from ecommerce_project.myapp.models import Cart, CartLine
+from ecommerce_project.myapp.models import Cart, CartLine, Product
 from ecommerce_project.myapp.serializers import CartOutputSerializer, \
     CartInputSerializer, CartLineOutputSerializer, CartLineInputSerializer, CartUpdateSerializer, \
-    CartLineUpdateSerializer, CartWithLinesOutputSerializer
+    CartLineUpdateSerializer, CartWithLinesOutputSerializer, AddToCartSerializer
 
 
 def get_cart_object(pk):
@@ -141,18 +141,24 @@ class AddToCartUserAPIView(APIView):
     #     return Response(serializer.data)
 
     def post(self, request, format=None):
-        params = request.data
-        user_id = params['user_id']
-        product_id = params['product_id']
-        print(user_id)
-        #now find the cart of this user, if no cart, create a cart
+        serializer = AddToCartSerializer(data=request.data.copy())
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        user_id = serializer.validated_data.get('user_id')
+        product_id = serializer.validated_data.get('product_id')
+
+        # now find the cart of this user, if no cart, create a cart
         try:
             user_cart = Cart.objects.get(user_id=user_id)
         except Cart.DoesNotExist:
             #we will create a cart for him
             user_cart = Cart.objects.create(user_id=user_id, unique_id="temp")
-            #now create a cartline for him
+
+        if Product.objects.filter(pk=product_id).exists():
+            # now create a cartline for him
             cart_line = CartLine.objects.create(product_id=product_id, cart_id=user_cart.id, quantity=1)
+        else:
+            raise Http404
 
 
         #coming here means cart exists, we will check if the cartline exists, if not create

@@ -219,3 +219,8 @@ class CartWithLinesOutputSerializer(serializers.ModelSerializer):
 
     def get_pk(self,obj):
         return obj.id
+
+
+class AddToCartSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField(required=True)
+    product_id = serializers.IntegerField(required=True)
