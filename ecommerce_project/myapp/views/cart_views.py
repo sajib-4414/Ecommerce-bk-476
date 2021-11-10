@@ -1,3 +1,5 @@
+import uuid
+
 from django.http import Http404
 from rest_framework import status
 from rest_framework.response import Response
@@ -152,7 +154,8 @@ class AddToCartUserAPIView(APIView):
             user_cart = Cart.objects.get(user_id=user_id)
         except Cart.DoesNotExist:
             #we will create a cart for him
-            user_cart = Cart.objects.create(user_id=user_id, unique_id="temp")
+            unique_id = uuid.uuid4().hex[:6].upper()
+            user_cart = Cart.objects.create(user_id=user_id, unique_id=unique_id)
 
         if Product.objects.filter(pk=product_id).exists():
             # now create a cartline for him

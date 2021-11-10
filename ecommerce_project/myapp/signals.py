@@ -1,3 +1,5 @@
+import uuid
+
 from django import dispatch
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -15,7 +17,10 @@ def create_user_profile(sender, instance, created, **kwargs):
         print("Observer:: A new user is created. A cart will be autocreated for him")
         if not Cart.objects.filter(user_id=instance.id).exists():
             # no cart exists, we will create a new cart for the user
-            Cart.objects.create(user_id=instance.id)
+            unique_id = uuid.uuid4().hex[:6].upper()
+            Cart.objects.create(user_id=instance.id,unique_id=unique_id)
+
+
 
 
 

@@ -1,3 +1,5 @@
+import uuid
+
 from rest_framework import serializers
 from ecommerce_project.myapp.models import Cart, OrderLine, CartLine, Product
 from ecommerce_project.myapp.serializers import BuyerOutputSerializer, ProductOutputSerializer
@@ -23,16 +25,16 @@ class CartInputSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ['user_id', 'unique_id']
-        required_spec_dict = {
-            'required': True,
-            'allow_blank': False
-        }
-        # This will force a field in the userinput to make it required, even if
-        # the corresponding model field is not required/null=true
-        extra_kwargs = {
-            'unique_id': required_spec_dict
-        }
+        fields = ['user_id']
+        # required_spec_dict = {
+        #     'required': True,
+        #     'allow_blank': False
+        # }
+        # # This will force a field in the userinput to make it required, even if
+        # # the corresponding model field is not required/null=true
+        # extra_kwargs = {
+        #     'unique_id': required_spec_dict
+        # }
 
     def create(self, validated_data):
         #the trick here is, we made the user field optional so the serializer donn't keep
@@ -40,7 +42,7 @@ class CartInputSerializer(serializers.ModelSerializer):
         #no sense to send user profile in the payload, only user id is enough
         #so, we add an extra field in the api payload, which will be cut
         # and then cart will be created and we later associate the user with this id in the cart
-        user_id = validated_data.pop('user_id')
+        user_id = validated_data.get('user_id')
 
         try:
             buyer_user = User.objects.get(pk=user_id)
@@ -49,8 +51,10 @@ class CartInputSerializer(serializers.ModelSerializer):
         if Cart.objects.filter(user=buyer_user).exists():
             raise serializers.ValidationError("userError: Cart already exists for the user")
         else:
+            unique_id = uuid.uuid4().hex[:6].upper()
             cart = Cart.objects.create(**validated_data)
-            cart.user = buyer_user
+            cart.unique_id = unique_id
+            # cart.user = buyer_user
 
         cart.save()
         return cart
