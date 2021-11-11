@@ -9,7 +9,8 @@ User = get_user_model()
 
 
 """
-This observer method observes whether a new user is created, then a cart object is created
+This observer method observes whether a new user is created, then a cart 
+object is created
 """
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -19,9 +20,6 @@ def create_user_profile(sender, instance, created, **kwargs):
             # no cart exists, we will create a new cart for the user
             unique_id = uuid.uuid4().hex[:6].upper()
             Cart.objects.create(user_id=instance.id,unique_id=unique_id)
-
-
-
 
 
 """
