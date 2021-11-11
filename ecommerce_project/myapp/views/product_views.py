@@ -3,7 +3,7 @@ from django.http import Http404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from ecommerce_project.myapp.models import Product
+from ecommerce_project.myapp.models import Product, CategoryFactory
 from ecommerce_project.myapp.serializers import ProductUpdateSerializer, ProductInputSerializer, ProductOutputSerializer
 
 
@@ -74,7 +74,8 @@ class ProductListByCategoryAPIView(APIView):
     '''
     '''
     def get(self, request, category_name, format=None):
-        product_list = Product.objects.filter(category__name__contains=category_name)
+        category = CategoryFactory.get_desired_category(category_name, 1)
+        product_list = Product.objects.filter(category__name__contains=category.name)
         serializer = ProductOutputSerializer(product_list, many=True)
         return Response(serializer.data)
 

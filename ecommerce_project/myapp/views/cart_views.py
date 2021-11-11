@@ -157,9 +157,11 @@ class AddToCartUserAPIView(APIView):
             unique_id = uuid.uuid4().hex[:6].upper()
             user_cart = Cart.objects.create(user_id=user_id, unique_id=unique_id)
 
+        cart_line = None
         if Product.objects.filter(pk=product_id).exists():
-            # now create a cartline for him
-            cart_line = CartLine.objects.create(product_id=product_id, cart_id=user_cart.id, quantity=1)
+
+            # now create a cartline for him or get existing one
+            cart_line, created = CartLine.objects.get_or_create(product_id=product_id, cart_id=user_cart.id)
         else:
             raise Http404
 
@@ -167,15 +169,17 @@ class AddToCartUserAPIView(APIView):
         #coming here means cart exists, we will check if the cartline exists, if not create
         #one, if yes , just raise the quantity
         #let's find if there is any cartline exists
-        try:
-            cartline = CartLine.objects.get(cart_id=user_cart.id, product_id=product_id)
-            #cartline exists, so increase the quantity
-            cartline.quantity = (cartline.quantity+1)
-            cartline.save()
 
-        except CartLine.DoesNotExist:
-            #coming here means the cartline does not exist
-            cart_line = CartLine.objects.create(product_id=product_id, cart_id=user_cart.id, quantity=1)
+        if not created:
+            # cartline = CartLine.objects.get(cart_id=user_cart.id, product_id=product_id)
+            #cartline exists, so increase the quantity
+            cart_line.quantity = (cart_line.quantity+1)
+            cart_line.save()
+
+        # except CartLine.DoesNotExist:
+        #
+        #     #coming here means the cartline does not exist
+        #     cart_line = CartLine.objects.create(product_id=product_id, cart_id=user_cart.id, quantity=1)
 
         # get the cart with cartlines object from the serializer
         serializer = CartWithLinesOutputSerializer(user_cart)

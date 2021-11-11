@@ -1,6 +1,63 @@
+import abc
+
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+
+class ICategory(metaclass=abc.ABCMeta):
+    @abc.abstractmethod
+    def get_name(self):
+        pass
+
+    @abc.abstractmethod
+    def get_details(self):
+        pass
+
+
+class TechCategory(ICategory):
+    def __init__(self, name, source, _id):
+        self.name = name
+        self.source = source
+        self._id = _id
+
+    def get_name(self):
+        return self.name
+
+    def get_details(self):
+        return {
+            'name': self.name,
+            'id': self._id,
+            'source':self.source
+        }
+
+
+class FashionCategory(ICategory):
+    def __init__(self, name, designer, _id):
+        self.name = name
+        self.designer = designer
+        self._id = _id
+
+    def get_name(self):
+        return self.name
+
+    def get_details(self):
+        return {
+            'name': self.name,
+            'id': self._id,
+            'designer': self.designer
+        }
+
+
+class CategoryFactory:
+
+    @staticmethod
+    def get_desired_category(name, _id):
+        if name == 'Tech':
+            return TechCategory("Tech","app", _id)
+        elif name == 'Fashion':
+            return FashionCategory("Fashion",'designer1', _id)
+
 
 class Address(models.Model):
     street_address = models.CharField(max_length=100)
